@@ -24,6 +24,7 @@ class StoreOrderRequest extends FormRequest
             'payment_method' => ['required', 'in:cash,gcash,maya,card'],
             'payment_status' => ['required', 'in:pending,paid,failed,refunded'],
             'estimated_fare' => ['nullable', 'numeric', 'min:0'],
+            'meta' => ['nullable', 'array'],
             'actual_fare' => ['nullable', 'numeric', 'min:0'],
             'scheduled_at' => ['nullable', 'date'],
         ];

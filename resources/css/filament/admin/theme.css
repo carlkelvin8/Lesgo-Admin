@@ -1,0 +1,587 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind variants;
+@import '../../../../vendor/filament/filament/resources/css/base.css';
+
+@config 'tailwind.config.js';
+
+/* ============================================
+   LIGHT MODE - Clean White Theme
+   ============================================ */
+
+:root {
+    --primary-50: 240 249 255;
+    --primary-100: 224 242 254;
+    --primary-200: 186 230 253;
+    --primary-300: 125 211 252;
+    --primary-400: 56 189 248;
+    --primary-500: 14 165 233;
+    --primary-600: 2 132 199;
+    --primary-700: 3 105 161;
+    --primary-800: 7 89 133;
+    --primary-900: 12 74 110;
+}
+
+/* Light Mode - Pure White Background */
+.fi-body {
+    background: #ffffff !important;
+}
+
+/* Login Page Override - Ensure no interference */
+.fi-simple-page {
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-height: 100vh !important;
+    height: 100vh !important;
+    display: flex !important;
+    align-items: stretch !important;
+}
+
+/* Light Mode - Clean White Cards */
+.fi-section,
+.fi-card,
+.fi-ta-table,
+.fi-wi-stats-overview-stat {
+    background-color: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 12px;
+}
+
+.fi-section:hover,
+.fi-card:hover,
+.fi-wi-stats-overview-stat:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+    border-color: #d1d5db;
+}
+
+/* Light Mode Text - High Contrast Black */
+.fi-section-header-heading,
+.fi-ta-header-heading,
+.fi-wi-stats-overview-stat-label,
+h1, h2, h3, h4, h5, h6 {
+    color: #111827 !important;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+.fi-ta-text,
+.fi-section-description,
+.fi-wi-stats-overview-stat-description,
+p, span, label {
+    color: #374151 !important;
+    font-weight: 500;
+}
+
+/* Light Mode - Clean White Sidebar */
+.fi-sidebar {
+    background: #ffffff !important;
+    border-right: 1px solid #e5e7eb;
+    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
+}
+
+.fi-sidebar-item-button {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 8px;
+    margin: 4px 8px;
+    color: #374151 !important;
+    font-weight: 500;
+}
+
+.fi-sidebar-item-button:hover {
+    background-color: #f3f4f6 !important;
+    transform: translateX(4px);
+    color: #111827 !important;
+}
+
+.fi-sidebar-item-button.fi-active {
+    background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+    font-weight: 600;
+}
+
+/* Light Mode Stats Cards */
+.fi-wi-stats-overview-stat {
+    background: #ffffff !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.fi-wi-stats-overview-stat::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+}
+
+.fi-wi-stats-overview-stat-value {
+    color: #111827 !important;
+    font-weight: 800;
+    font-size: 1.875rem;
+}
+
+/* Light Mode Charts */
+.fi-wi-chart {
+    background-color: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Light Mode Buttons */
+.fi-btn-primary {
+    background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%) !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fi-btn-primary:hover {
+    box-shadow: 0 8px 20px rgba(56, 189, 248, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Light Mode Table */
+.fi-ta-table {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+}
+
+.fi-ta-row {
+    transition: all 0.2s ease;
+}
+
+.fi-ta-row:hover {
+    background: #f9fafb !important;
+}
+
+.fi-ta-header {
+    background: #f9fafb !important;
+    font-weight: 700;
+    color: #111827 !important;
+}
+
+/* Light Mode Forms */
+.fi-input,
+.fi-select,
+.fi-textarea {
+    border: 1px solid #d1d5db !important;
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    transition: all 0.2s ease;
+}
+
+.fi-input:focus,
+.fi-select:focus,
+.fi-textarea:focus {
+    border-color: #38bdf8 !important;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+    outline: none;
+}
+
+/* Light Mode Header */
+.fi-topbar {
+    background: #ffffff !important;
+    border-bottom: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Light Mode Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f9fafb;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
+/* ============================================
+   DARK MODE - Purple Company Theme
+   ============================================ */
+
+.dark .fi-body {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%) !important;
+}
+
+/* Dark Mode Cards - Purple Tint */
+.dark .fi-section,
+.dark .fi-card,
+.dark .fi-ta-table,
+.dark .fi-wi-stats-overview-stat {
+    background: linear-gradient(135deg, rgba(88, 28, 135, 0.3) 0%, rgba(76, 29, 149, 0.2) 100%) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(168, 85, 247, 0.2) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(168, 85, 247, 0.1);
+}
+
+.dark .fi-section:hover,
+.dark .fi-card:hover,
+.dark .fi-wi-stats-overview-stat:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(168, 85, 247, 0.2);
+    border-color: rgba(168, 85, 247, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Dark Mode Text - High Contrast */
+.dark .fi-section-header-heading,
+.dark .fi-ta-header-heading,
+.dark .fi-wi-stats-overview-stat-label,
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+    color: #f3e8ff !important;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dark .fi-ta-text,
+.dark .fi-section-description,
+.dark .fi-wi-stats-overview-stat-description,
+.dark p, .dark span, .dark label {
+    color: #e9d5ff !important;
+    font-weight: 500;
+}
+
+/* Dark Mode Sidebar - Purple Gradient */
+.dark .fi-sidebar {
+    background: linear-gradient(180deg, rgba(88, 28, 135, 0.4) 0%, rgba(76, 29, 149, 0.3) 100%) !important;
+    backdrop-filter: blur(10px);
+    border-right: 1px solid rgba(168, 85, 247, 0.2);
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.5);
+}
+
+.dark .fi-sidebar-item-button {
+    color: #e9d5ff !important;
+}
+
+.dark .fi-sidebar-item-button:hover {
+    background: rgba(168, 85, 247, 0.2) !important;
+    color: #f3e8ff !important;
+}
+
+.dark .fi-sidebar-item-button.fi-active {
+    background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.5);
+}
+
+/* Dark Mode Stats Cards - Purple Accent */
+.dark .fi-wi-stats-overview-stat {
+    background: linear-gradient(135deg, rgba(88, 28, 135, 0.4) 0%, rgba(76, 29, 149, 0.3) 100%) !important;
+}
+
+.dark .fi-wi-stats-overview-stat::before {
+    background: linear-gradient(90deg, #a855f7, #9333ea, #7e22ce);
+}
+
+.dark .fi-wi-stats-overview-stat-value {
+    color: #f3e8ff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark Mode Charts - Purple Tint */
+.dark .fi-wi-chart {
+    background: linear-gradient(135deg, rgba(88, 28, 135, 0.3) 0%, rgba(76, 29, 149, 0.2) 100%) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(168, 85, 247, 0.2) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark Mode Buttons - Purple */
+.dark .fi-btn-primary {
+    background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%) !important;
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+}
+
+.dark .fi-btn-primary:hover {
+    box-shadow: 0 8px 20px rgba(168, 85, 247, 0.5);
+}
+
+/* Dark Mode Table - Purple Tint */
+.dark .fi-ta-table {
+    border: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+.dark .fi-ta-row:hover {
+    background: rgba(168, 85, 247, 0.1) !important;
+}
+
+.dark .fi-ta-header {
+    background: linear-gradient(135deg, rgba(88, 28, 135, 0.4) 0%, rgba(76, 29, 149, 0.3) 100%) !important;
+    color: #f3e8ff !important;
+}
+
+/* Dark Mode Forms - Purple Accent */
+.dark .fi-input,
+.dark .fi-select,
+.dark .fi-textarea {
+    border: 1px solid rgba(168, 85, 247, 0.3) !important;
+    background: rgba(88, 28, 135, 0.2) !important;
+    color: #f3e8ff !important;
+}
+
+.dark .fi-input:focus,
+.dark .fi-select:focus,
+.dark .fi-textarea:focus {
+    border-color: #a855f7 !important;
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+}
+
+/* Dark Mode Header - Purple */
+.dark .fi-topbar {
+    background: linear-gradient(135deg, rgba(88, 28, 135, 0.5) 0%, rgba(76, 29, 149, 0.4) 100%) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Dark Mode Scrollbar - Purple */
+.dark ::-webkit-scrollbar-track {
+    background: rgba(88, 28, 135, 0.3);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.5), rgba(147, 51, 234, 0.5));
+    border-radius: 5px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #a855f7, #9333ea);
+}
+
+/* Dark Mode Badges - Purple */
+.dark .fi-badge {
+    background: rgba(168, 85, 247, 0.2) !important;
+    color: #e9d5ff !important;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+/* Dark Mode Modal - Purple */
+.dark .fi-modal {
+    background: linear-gradient(135deg, rgba(88, 28, 135, 0.95) 0%, rgba(76, 29, 149, 0.95) 100%) !important;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+/* Dark Mode Notification - Purple */
+.dark .fi-notification {
+    background: linear-gradient(135deg, rgba(88, 28, 135, 0.95) 0%, rgba(76, 29, 149, 0.95) 100%) !important;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+/* Dark Mode Dropdown - Purple */
+.dark .fi-dropdown-panel {
+    background: linear-gradient(135deg, rgba(88, 28, 135, 0.95) 0%, rgba(76, 29, 149, 0.95) 100%) !important;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+/* ============================================
+   SHARED ENHANCEMENTS
+   ============================================ */
+
+/* Smooth Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fi-main {
+    animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Modal Enhancement */
+.fi-modal {
+    border-radius: 16px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Notification Enhancement */
+.fi-notification {
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Icon Enhancements */
+.fi-icon {
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fi-icon:hover {
+    transform: scale(1.15) rotate(5deg);
+}
+
+.fi-sidebar-item-button:hover .fi-sidebar-item-icon {
+    transform: scale(1.1);
+}
+
+/* Loading Spinner */
+.fi-spinner {
+    border-color: #38bdf8;
+    border-top-color: transparent;
+}
+
+.dark .fi-spinner {
+    border-color: #a855f7;
+    border-top-color: transparent;
+}
+
+/* Loading State Background */
+.fi-section-loading {
+    background-color: #f9fafb !important;
+}
+
+.dark .fi-section-loading {
+    background: linear-gradient(135deg, rgba(88, 28, 135, 0.5) 0%, rgba(76, 29, 149, 0.4) 100%) !important;
+    backdrop-filter: blur(10px);
+}
+
+/* Page Loading Overlay */
+body.loading::before,
+.fi-loading-overlay {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    z-index: 9999;
+}
+
+.dark body.loading::before,
+.dark .fi-loading-overlay {
+    background: linear-gradient(135deg, rgba(30, 27, 75, 0.95) 0%, rgba(49, 46, 129, 0.95) 50%, rgba(76, 29, 149, 0.95) 100%);
+    backdrop-filter: blur(10px);
+}
+
+/* Filament Loading Indicator */
+.fi-loading-indicator {
+    background-color: #ffffff !important;
+    border: 1px solid #e5e7eb;
+}
+
+.dark .fi-loading-indicator {
+    background: linear-gradient(135deg, rgba(88, 28, 135, 0.9) 0%, rgba(76, 29, 149, 0.8) 100%) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+/* Loading Spinner Animation */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.fi-spinner {
+    animation: spin 1s linear infinite;
+}
+
+/* Table Loading State */
+.fi-ta-table.fi-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.dark .fi-ta-table.fi-loading {
+    background: linear-gradient(135deg, rgba(88, 28, 135, 0.3) 0%, rgba(76, 29, 149, 0.2) 100%) !important;
+}
+
+/* Form Loading State */
+.fi-form.fi-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.dark .fi-form.fi-loading {
+    background: linear-gradient(135deg, rgba(88, 28, 135, 0.2) 0%, rgba(76, 29, 149, 0.1) 100%) !important;
+}
+
+/* Widget Loading State */
+.fi-wi.fi-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.dark .fi-wi.fi-loading {
+    background: linear-gradient(135deg, rgba(88, 28, 135, 0.3) 0%, rgba(76, 29, 149, 0.2) 100%) !important;
+}
+
+/* Focus Ring Enhancement */
+*:focus-visible {
+    outline: 2px solid #38bdf8;
+    outline-offset: 2px;
+}
+
+.dark *:focus-visible {
+    outline: 2px solid #a855f7;
+    outline-offset: 2px;
+}
+
+/* Selection Color */
+::selection {
+    background-color: #38bdf8;
+    color: #ffffff;
+}
+
+.dark ::selection {
+    background-color: #a855f7;
+    color: #ffffff;
+}
+
+/* Badge Enhancements */
+.fi-badge {
+    font-weight: 600;
+    padding: 0.375rem 0.875rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    letter-spacing: 0.025em;
+}
+
+/* Action Button Group */
+.fi-ta-actions {
+    gap: 0.5rem;
+}
+
+/* Purple Glow Effect for Dark Mode */
+.dark .fi-section:hover,
+.dark .fi-card:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4), 
+                0 4px 8px rgba(168, 85, 247, 0.3),
+                0 0 40px rgba(168, 85, 247, 0.1);
+}
+
+/* Welcome Banner Dark Mode */
+.dark .dashboard-welcome {
+    background: linear-gradient(135deg, #7e22ce 0%, #9333ea 50%, #a855f7 100%) !important;
+    box-shadow: 0 10px 30px rgba(168, 85, 247, 0.5);
+}

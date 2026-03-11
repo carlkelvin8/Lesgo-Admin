@@ -119,7 +119,9 @@ class DriverProfileResource extends Resource
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            DriverProfileResource\RelationManagers\VehiclesRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

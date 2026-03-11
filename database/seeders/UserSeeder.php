@@ -10,30 +10,85 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
+        // Admin User (already created, but ensure it exists)
         User::firstOrCreate(
-            ['email' => 'admin@lesgo.ph'],
+            ['email' => 'admin@lesgo.com'],
             [
-                'name' => 'System Admin',
-                'phone_number' => '09000000001',
+                'name' => 'Admin User',
                 'password' => Hash::make('password'),
                 'role' => 'admin',
+                'phone_number' => '+63 917 123 4567',
                 'email_verified_at' => now(),
             ]
         );
 
-        User::firstOrCreate(
-            ['email' => 'staff@lesgo.ph'],
-            [
-                'name' => 'Staff User',
-                'phone_number' => '09000000002',
+        // Staff Users
+        User::create([
+            'name' => 'Maria Santos',
+            'email' => 'maria.santos@lesgo.com',
+            'password' => Hash::make('password'),
+            'role' => 'staff',
+            'phone_number' => '+63 917 234 5678',
+            'email_verified_at' => now(),
+        ]);
+
+        User::create([
+            'name' => 'Juan Dela Cruz',
+            'email' => 'juan.delacruz@lesgo.com',
+            'password' => Hash::make('password'),
+            'role' => 'staff',
+            'phone_number' => '+63 917 345 6789',
+            'email_verified_at' => now(),
+        ]);
+
+        // Partner Users
+        $partner1 = User::create([
+            'name' => 'FastMove Logistics',
+            'email' => 'contact@fastmove.com',
+            'password' => Hash::make('password'),
+            'role' => 'partner',
+            'phone_number' => '+63 917 456 7890',
+            'email_verified_at' => now(),
+        ]);
+
+        $partner2 = User::create([
+            'name' => 'QuickDeliver Express',
+            'email' => 'info@quickdeliver.com',
+            'password' => Hash::make('password'),
+            'role' => 'partner',
+            'phone_number' => '+63 917 567 8901',
+            'email_verified_at' => now(),
+        ]);
+
+        // Driver Users
+        for ($i = 1; $i <= 10; $i++) {
+            User::create([
+                'name' => "Driver {$i}",
+                'email' => "driver{$i}@lesgo.com",
                 'password' => Hash::make('password'),
-                'role' => 'staff',
+                'role' => 'driver',
+                'phone_number' => '+63 917 ' . str_pad($i * 111, 7, '0', STR_PAD_LEFT),
                 'email_verified_at' => now(),
-            ]
-        );
+            ]);
+        }
 
-        User::factory()->customer()->count(20)->create();
-        User::factory()->driver()->count(10)->create();
-        User::factory()->partner()->count(5)->create();
+        // Customer Users
+        $customerNames = [
+            'Pedro Reyes', 'Ana Garcia', 'Carlos Mendoza', 'Sofia Torres',
+            'Miguel Ramos', 'Isabella Cruz', 'Diego Flores', 'Valentina Lopez',
+            'Gabriel Santos', 'Camila Rivera', 'Lucas Morales', 'Emma Diaz',
+            'Mateo Hernandez', 'Olivia Castro', 'Sebastian Ortiz'
+        ];
+
+        foreach ($customerNames as $index => $name) {
+            User::create([
+                'name' => $name,
+                'email' => strtolower(str_replace(' ', '.', $name)) . '@gmail.com',
+                'password' => Hash::make('password'),
+                'role' => 'customer',
+                'phone_number' => '+63 917 ' . str_pad(($index + 1) * 222, 7, '0', STR_PAD_LEFT),
+                'email_verified_at' => now(),
+            ]);
+        }
     }
 }

@@ -12,8 +12,15 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             PartnerSeeder::class,
+            AddressSeeder::class,
+            CustomerProfileSeeder::class,
+            PartnerBranchSeeder::class,
             ServiceSeeder::class,
+            DriverProfileSeeder::class,
+            VehicleSeeder::class,
             OrderSeeder::class,
+            PaymentSeeder::class,
+            WalletSeeder::class,
         ]);
     }
 }

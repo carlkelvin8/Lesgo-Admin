@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Models;
 
@@ -16,7 +16,7 @@ class Partner extends Model
         'slug',
         'business_type',
         'tax_id',
-        'support_email',
+        'store_address',
         'support_phone',
         'status',
     ];

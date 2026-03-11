@@ -58,9 +58,11 @@ class PartnerResource extends Resource
                 ])->columns(2),
             Forms\Components\Section::make('Contact Information')
                 ->schema([
-                    Forms\Components\TextInput::make('support_email')
-                        ->email()
-                        ->maxLength(255),
+                    Forms\Components\Textarea::make('store_address')
+                        ->label('Store Address')
+                        ->maxLength(500)
+                        ->rows(3)
+                        ->placeholder('Enter complete store address'),
                     Forms\Components\TextInput::make('support_phone')
                         ->tel()
                         ->maxLength(100),
@@ -83,8 +85,10 @@ class PartnerResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('business_type')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('support_email')
+                Tables\Columns\TextColumn::make('store_address')
+                    ->label('Store Address')
                     ->searchable()
+                    ->limit(50)
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('support_phone')
                     ->toggleable(),
@@ -133,7 +137,12 @@ class PartnerResource extends Resource
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            PartnerResource\RelationManagers\BranchesRelationManager::class,
+            PartnerResource\RelationManagers\ServicesRelationManager::class,
+            PartnerResource\RelationManagers\DriversRelationManager::class,
+            PartnerResource\RelationManagers\VehiclesRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

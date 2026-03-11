@@ -9,7 +9,20 @@ class UpdateUserRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        $user = $this->user();
+        $targetUser = $this->route('user');
+        
+        // Admins can update anyone
+        if ($user->role === 'admin') {
+            return true;
+        }
+        
+        // Users can update their own profile (but not their role)
+        if ($user->id === $targetUser?->id && !$this->has('role')) {
+            return true;
+        }
+        
+        return false;
     }
 
     public function rules(): array

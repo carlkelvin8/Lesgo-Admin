@@ -16,6 +16,9 @@ class PaymentResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
     protected static ?string $navigationGroup = 'Finance';
     protected static ?int $navigationSort = 1;
+    protected static ?string $navigationLabel = 'Payments';
+    protected static ?string $pluralModelLabel = 'Payments';
+    protected static ?string $modelLabel = 'Payment';
 
     public static function form(Form $form): Form
     {
@@ -133,6 +136,7 @@ class PaymentResource extends Resource
     {
         return [
             'index' => Pages\ListPayments::route('/'),
+            'create' => Pages\CreatePayment::route('/create'),
             'view' => Pages\ViewPayment::route('/{record}'),
             'edit' => Pages\EditPayment::route('/{record}/edit'),
         ];

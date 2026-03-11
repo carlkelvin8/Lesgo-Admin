@@ -17,6 +17,9 @@ class OrderResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
     protected static ?string $navigationGroup = 'Operations';
     protected static ?int $navigationSort = 1;
+    protected static ?string $navigationLabel = 'Orders';
+    protected static ?string $pluralModelLabel = 'Orders';
+    protected static ?string $modelLabel = 'Order';
 
     public static function form(Form $form): Form
     {
@@ -183,7 +186,9 @@ class OrderResource extends Resource
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            OrderResource\RelationManagers\PaymentsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

@@ -26,20 +26,64 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            ->login(\App\Filament\Pages\Auth\Login::class)
+            ->brandName('Lesgo Admin')
+            ->brandLogo(asset('images/logo.svg'))
+            ->brandLogoHeight('2rem')
+            ->favicon(asset('images/favicon.png'))
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Sky,
+                'danger' => Color::Red,
+                'gray' => Color::Zinc,
+                'info' => Color::Blue,
+                'success' => Color::Green,
+                'warning' => Color::Amber,
+            ])
+            ->font('Inter')
+            ->theme(asset('css/filament/admin/theme.css'))
+            ->maxContentWidth('full')
+            ->sidebarCollapsibleOnDesktop()
+            ->sidebarWidth('16rem')
+            ->navigationGroups([
+                'Dashboard',
+                'User Management',
+                'Business',
+                'Operations',
+                'Finance',
+                'System',
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
-                Pages\Dashboard::class,
+                \App\Filament\Pages\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                // Widgets are auto-discovered
             ])
+            ->databaseNotifications()
+            ->databaseNotificationsPolling('30s')
+            ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
+            ->spa()
+            ->renderHook(
+                'panels::body.end',
+                fn (): string => '<script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        setTimeout(function() {
+                            const logoutButtons = document.querySelectorAll(\'[data-filament-user-menu-item="logout"]\');
+                            logoutButtons.forEach(function(button) {
+                                button.addEventListener("click", function(e) {
+                                    if (!confirm("Are you sure you want to logout from your account?")) {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        return false;
+                                    }
+                                });
+                            });
+                        }, 500);
+                    });
+                </script>'
+            )
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

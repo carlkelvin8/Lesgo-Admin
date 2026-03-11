@@ -16,7 +16,7 @@ class StorePartnerRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'legal_name' => ['nullable', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'unique:partners,slug', 'max:255'],
+            'slug' => ['required', 'string', 'unique:partners,slug', 'max:255'],
             'business_type' => ['nullable', 'string', 'max:100'],
             'tax_id' => ['nullable', 'string', 'max:100'],
             'support_email' => ['nullable', 'email', 'max:255'],

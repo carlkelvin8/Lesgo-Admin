@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Models;
 
@@ -19,6 +19,10 @@ class User extends Authenticatable implements FilamentUser
         'password',
         'role',
         'email_verified_at',
+        'is_banned',
+        'banned_at',
+        'ban_reason',
+        'banned_by',
     ];
 
     protected $hidden = [
@@ -31,11 +35,18 @@ class User extends Authenticatable implements FilamentUser
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_banned' => 'boolean',
+            'banned_at' => 'datetime',
         ];
     }
 
     public function canAccessPanel(Panel $panel): bool
     {
+        // Banned users cannot access the panel
+        if ($this->is_banned) {
+            return false;
+        }
+        
         return in_array($this->role, ['admin', 'staff']);
     }
 
@@ -92,5 +103,15 @@ class User extends Authenticatable implements FilamentUser
     public function payments()
     {
         return $this->hasMany(Payment::class, 'customer_id');
+    }
+
+    public function bannedBy()
+    {
+        return $this->belongsTo(User::class, 'banned_by');
+    }
+
+    public function bannedUsers()
+    {
+        return $this->hasMany(User::class, 'banned_by');
     }
 }
