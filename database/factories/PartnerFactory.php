@@ -13,13 +13,14 @@ class PartnerFactory extends Factory
     public function definition(): array
     {
         $name = fake()->company();
+
         return [
             'name' => $name,
-            'legal_name' => $name . ' Inc.',
-            'slug' => Str::slug($name) . '-' . fake()->unique()->randomNumber(4),
+            'legal_name' => $name.' Inc.',
+            'slug' => Str::slug($name).'-'.fake()->unique()->randomNumber(4),
             'business_type' => fake()->randomElement(['logistics', 'delivery', 'transport', 'courier']),
             'tax_id' => fake()->numerify('###-###-###-###'),
-            'support_email' => fake()->companyEmail(),
+            'store_address' => fake()->address(),
             'support_phone' => fake()->numerify('09#########'),
             'status' => fake()->randomElement(['active', 'pending', 'suspended']),
         ];

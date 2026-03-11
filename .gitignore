@@ -1,5 +1,8 @@
 *.log
 .DS_Store
+__MACOSX/
+._*
+*.zip
 .env
 .env.backup
 .env.production

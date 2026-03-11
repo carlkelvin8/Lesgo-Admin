@@ -19,7 +19,7 @@ class StorePartnerRequest extends FormRequest
             'slug' => ['required', 'string', 'unique:partners,slug', 'max:255'],
             'business_type' => ['nullable', 'string', 'max:100'],
             'tax_id' => ['nullable', 'string', 'max:100'],
-            'support_email' => ['nullable', 'email', 'max:255'],
+            'store_address' => ['nullable', 'string', 'max:500'],
             'support_phone' => ['nullable', 'string', 'max:100'],
             'status' => ['required', 'in:pending,active,suspended,rejected'],
             'user_id' => ['nullable', 'exists:users,id'],
