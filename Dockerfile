@@ -8,7 +8,6 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libicu-dev \
     nginx \
-    supervisor \
     && docker-php-ext-install \
     pdo_pgsql \
     zip \
@@ -39,12 +38,8 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
 RUN cat > /etc/nginx/sites-available/default <<'EOF'
 server {
     listen 80 default_server;
-    listen [::]:80 default_server;
-    
     root /var/www/html/public;
-    index index.php index.html index.htm index.nginx-debian.html;
-    
-    server_name _;
+    index index.php;
     
     location / {
         try_files $uri $uri/ /index.php?$query_string;
@@ -52,35 +47,13 @@ server {
     
     location ~ \.php$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+        fastcgi_pass 127.0.0.1:9000;
     }
     
     location ~ /\.ht {
         deny all;
     }
 }
-EOF
-
-# Configure Supervisor
-RUN mkdir -p /var/log/supervisor
-RUN cat > /etc/supervisor/conf.d/supervisord.conf <<'EOF'
-[supervisord]
-nodaemon=true
-logfile=/var/log/supervisor/supervisord.log
-
-[program:php-fpm]
-command=/usr/local/sbin/php-fpm
-autostart=true
-autorestart=true
-stderr_logfile=/var/log/supervisor/php-fpm.err.log
-stdout_logfile=/var/log/supervisor/php-fpm.out.log
-
-[program:nginx]
-command=/usr/sbin/nginx -g "daemon off;"
-autostart=true
-autorestart=true
-stderr_logfile=/var/log/supervisor/nginx.err.log
-stdout_logfile=/var/log/supervisor/nginx.out.log
 EOF
 
 # Generate app key
