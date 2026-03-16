@@ -39,18 +39,16 @@ RUN php artisan key:generate --force || true
 # Run migrations
 RUN php artisan migrate --force || true
 
-# Nginx stage
+# Nginx + PHP-FPM stage
 FROM nginx:alpine
+
+# Install PHP-FPM and dependencies
+RUN apk add --no-cache php82-fpm php82-pdo_pgsql php82-zip php82-intl php82-mbstring php82-ctype php82-json
 
 WORKDIR /var/www/html
 
-# Copy PHP files from php stage
+# Copy application files from php stage
 COPY --from=php /var/www/html /var/www/html
-
-# Copy PHP-FPM from php stage
-COPY --from=php /usr/local/bin/php /usr/local/bin/php
-COPY --from=php /usr/local/lib/php /usr/local/lib/php
-COPY --from=php /usr/local/etc/php /usr/local/etc/php
 
 # Configure Nginx
 RUN cat > /etc/nginx/conf.d/default.conf <<'EOF'
@@ -80,4 +78,4 @@ EOF
 EXPOSE 80
 
 # Start both PHP-FPM and Nginx
-CMD php-fpm -D && nginx -g "daemon off;"
+CMD sh -c "php-fpm82 -D && nginx -g 'daemon off;'"
