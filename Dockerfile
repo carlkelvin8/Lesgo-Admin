@@ -23,7 +23,7 @@ WORKDIR /app
 COPY . .
 
 # Install PHP dependencies
-RUN composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-req=ext-intl --ignore-platform-req=ext-zip
+RUN composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-req=ext-intl --ignore-platform-req=ext-zip --ignore-platform-req=php
 
 # Install Node dependencies and build assets
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
