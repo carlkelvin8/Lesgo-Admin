@@ -34,6 +34,9 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
 # Generate app key
 RUN php artisan key:generate --force || true
 
+# Run migrations
+RUN php artisan migrate --force || true
+
 # Expose port
 EXPOSE 8000
 
