@@ -3,8 +3,13 @@ nixpkgs = ["php82", "php82Extensions.intl", "php82Extensions.zip", "php82Extensi
 
 [phases.install]
 cmds = [
-  "chmod +x ./build.sh",
-  "./build.sh"
+  "composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-req=ext-intl --ignore-platform-req=ext-zip"
+]
+
+[phases.build]
+cmds = [
+  "npm install",
+  "npm run build"
 ]
 
 [start]
