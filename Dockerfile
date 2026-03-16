@@ -86,9 +86,10 @@ EOF
 # Generate app key
 RUN php artisan key:generate --force || true
 
-# Run migrations
-RUN php artisan migrate --force || true
+# Copy entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 80
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["/usr/local/bin/docker-entrypoint.sh"]
