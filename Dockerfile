@@ -42,8 +42,8 @@ RUN php artisan migrate --force || true
 # Nginx + PHP-FPM stage
 FROM nginx:alpine
 
-# Install PHP-FPM and dependencies
-RUN apk add --no-cache php82-fpm php82-pdo_pgsql php82-zip php82-intl php82-mbstring php82-ctype php82-json
+# Install PHP-FPM and dependencies from Alpine
+RUN apk add --no-cache php82 php82-fpm php82-pdo_pgsql php82-zip php82-intl php82-mbstring php82-ctype php82-json php82-session
 
 WORKDIR /var/www/html
 
@@ -75,7 +75,19 @@ server {
 }
 EOF
 
+# Create PHP-FPM config
+RUN mkdir -p /etc/php82/php-fpm.d && \
+    cat > /etc/php82/php-fpm.conf <<'EOF'
+[global]
+daemonize = no
+
+[www]
+listen = 127.0.0.1:9000
+user = nobody
+group = nobody
+EOF
+
 EXPOSE 80
 
 # Start both PHP-FPM and Nginx
-CMD sh -c "php-fpm82 -D && nginx -g 'daemon off;'"
+CMD sh -c "/usr/sbin/php-fpm82 && nginx -g 'daemon off;'"
