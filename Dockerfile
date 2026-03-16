@@ -13,8 +13,9 @@ RUN apt-get update && apt-get install -y \
     intl \
     && rm -rf /var/lib/apt/lists/*
 
-# Enable Apache modules (rewrite is already enabled in php:8.2-apache)
-RUN a2enmod rewrite headers
+# Disable conflicting MPM modules and enable only prefork
+RUN a2dismod mpm_event mpm_worker 2>/dev/null || true
+RUN a2enmod mpm_prefork rewrite headers
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
