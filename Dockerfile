@@ -13,9 +13,8 @@ RUN apt-get update && apt-get install -y \
     intl \
     && rm -rf /var/lib/apt/lists/*
 
-# Enable Apache modules
-RUN a2enmod rewrite
-RUN a2enmod headers
+# Enable Apache modules (rewrite is already enabled in php:8.2-apache)
+RUN a2enmod rewrite headers
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -40,14 +39,29 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     npm install && \
     npm run build
 
-# Configure Apache
-RUN echo '<Directory /var/www/html/public>' > /etc/apache2/sites-available/000-default.conf && \
-    echo '    Options Indexes FollowSymLinks' >> /etc/apache2/sites-available/000-default.conf && \
-    echo '    AllowOverride All' >> /etc/apache2/sites-available/000-default.conf && \
-    echo '    Require all granted' >> /etc/apache2/sites-available/000-default.conf && \
-    echo '</Directory>' >> /etc/apache2/sites-available/000-default.conf && \
-    echo '' >> /etc/apache2/sites-available/000-default.conf && \
-    echo 'DocumentRoot /var/www/html/public' >> /etc/apache2/sites-available/000-default.conf
+# Configure Apache VirtualHost
+RUN cat > /etc/apache2/sites-available/000-default.conf <<'EOF'
+<VirtualHost *:80>
+    DocumentRoot /var/www/html/public
+    
+    <Directory /var/www/html/public>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+        
+        <IfModule mod_rewrite.c>
+            RewriteEngine On
+            RewriteCond %{REQUEST_FILENAME} !-f
+            RewriteCond %{REQUEST_FILENAME} !-d
+            RewriteRule ^ index.php [QSA,L]
+        </IfModule>
+    </Directory>
+    
+    <Directory /var/www/html>
+        AllowOverride All
+    </Directory>
+</VirtualHost>
+EOF
 
 # Generate app key
 RUN php artisan key:generate --force || true
