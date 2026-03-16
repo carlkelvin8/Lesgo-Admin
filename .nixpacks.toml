@@ -1,19 +1,10 @@
 [phases.setup]
-nixpkgs = ["php82", "php82Extensions.intl", "php82Extensions.zip", "php82Extensions.pdo_pgsql", "php82Extensions.redis", "composer"]
+nixpkgs = ["php82", "php82Extensions.intl", "php82Extensions.zip", "php82Extensions.pdo_pgsql", "php82Extensions.redis", "composer", "nodejs"]
 
 [phases.install]
 cmds = [
-  "composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-req=ext-intl --ignore-platform-req=ext-zip --ignore-platform-req=php"
-]
-
-[phases.build]
-cmds = [
-  "npm install",
-  "npm run build",
-  "php artisan migrate --force || true",
-  "php artisan config:cache",
-  "php artisan route:cache",
-  "php artisan view:cache"
+  "chmod +x ./build.sh",
+  "./build.sh"
 ]
 
 [start]
