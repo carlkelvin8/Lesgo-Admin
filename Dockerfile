@@ -48,7 +48,7 @@ server {
     
     location ~ \.php$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
     }
     
     location ~ /\.ht {
