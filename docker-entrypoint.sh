@@ -10,5 +10,6 @@ echo "Clearing cache..."
 php artisan config:cache 2>&1 || true
 php artisan route:cache 2>&1 || true
 
-echo "Starting supervisor..."
-exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+echo "Starting PHP-FPM and Nginx..."
+php-fpm -D
+nginx -g "daemon off;"
