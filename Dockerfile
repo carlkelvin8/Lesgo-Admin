@@ -1,4 +1,4 @@
-FROM php:8.2-fpm as php
+FROM php:8.2-fpm
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -7,6 +7,8 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libzip-dev \
     libicu-dev \
+    nginx \
+    supervisor \
     && docker-php-ext-install \
     pdo_pgsql \
     zip \
@@ -33,61 +35,60 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     npm install && \
     npm run build
 
-# Generate app key
-RUN php artisan key:generate --force || true
-
-# Run migrations
-RUN php artisan migrate --force || true
-
-# Nginx + PHP-FPM stage
-FROM nginx:alpine
-
-# Install PHP-FPM and dependencies from Alpine
-RUN apk add --no-cache php82 php82-fpm php82-pdo_pgsql php82-zip php82-intl php82-mbstring php82-ctype php82-json php82-session
-
-WORKDIR /var/www/html
-
-# Copy application files from php stage
-COPY --from=php /var/www/html /var/www/html
-
 # Configure Nginx
-RUN cat > /etc/nginx/conf.d/default.conf <<'EOF'
+RUN cat > /etc/nginx/sites-available/default <<'EOF'
 server {
-    listen 80;
-    server_name _;
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    
     root /var/www/html/public;
-    index index.php;
-
+    index index.php index.html index.htm index.nginx-debian.html;
+    
+    server_name _;
+    
     location / {
         try_files $uri $uri/ /index.php?$query_string;
     }
-
+    
     location ~ \.php$ {
-        fastcgi_pass 127.0.0.1:9000;
-        fastcgi_index index.php;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        include fastcgi_params;
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
     }
-
+    
     location ~ /\.ht {
         deny all;
     }
 }
 EOF
 
-# Create PHP-FPM config
-RUN mkdir -p /etc/php82/php-fpm.d && \
-    cat > /etc/php82/php-fpm.conf <<'EOF'
-[global]
-daemonize = no
+# Configure Supervisor
+RUN mkdir -p /var/log/supervisor
+RUN cat > /etc/supervisor/conf.d/supervisord.conf <<'EOF'
+[supervisord]
+nodaemon=true
+logfile=/var/log/supervisor/supervisord.log
 
-[www]
-listen = 127.0.0.1:9000
-user = nobody
-group = nobody
+[program:php-fpm]
+command=/usr/local/sbin/php-fpm
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/supervisor/php-fpm.err.log
+stdout_logfile=/var/log/supervisor/php-fpm.out.log
+
+[program:nginx]
+command=/usr/sbin/nginx -g "daemon off;"
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/supervisor/nginx.err.log
+stdout_logfile=/var/log/supervisor/nginx.out.log
 EOF
+
+# Generate app key
+RUN php artisan key:generate --force || true
+
+# Run migrations
+RUN php artisan migrate --force || true
 
 EXPOSE 80
 
-# Start both PHP-FPM and Nginx
-CMD sh -c "/usr/sbin/php-fpm82 && nginx -g 'daemon off;'"
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
