@@ -1,8 +1,8 @@
 #!/bin/sh
-set -e
 
 echo "Running migrations..."
-php artisan migrate --force 2>&1 || true
+php artisan migrate --force
+echo "Migration exit code: $?"
 
 echo "Clearing cache..."
 php artisan cache:clear 2>&1 || true
