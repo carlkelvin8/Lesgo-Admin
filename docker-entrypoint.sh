@@ -1,15 +1,10 @@
 #!/bin/bash
 
-echo "Waiting for database to be ready..."
-sleep 10
-
-echo "Running database migrations..."
-php artisan migrate --force
-
-echo "Clearing cache..."
-php artisan config:cache 2>&1 || true
-php artisan route:cache 2>&1 || true
-
-echo "Starting PHP-FPM and Nginx..."
+echo "Starting PHP-FPM..."
 php-fpm -D
+
+echo "Waiting for PHP-FPM to start..."
+sleep 2
+
+echo "Starting Nginx..."
 nginx -g "daemon off;"
