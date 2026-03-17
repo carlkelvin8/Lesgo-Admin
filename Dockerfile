@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.2-cli
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -7,7 +7,6 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libzip-dev \
     libicu-dev \
-    nginx \
     && docker-php-ext-install \
     pdo_pgsql \
     zip \
@@ -33,28 +32,6 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs && \
     npm install && \
     npm run build
-
-# Configure Nginx to use Unix socket
-RUN cat > /etc/nginx/sites-available/default <<'EOF'
-server {
-    listen 80 default_server;
-    root /var/www/html/public;
-    index index.php;
-    
-    location / {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
-    
-    location ~ \.php$ {
-        include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
-    }
-    
-    location ~ /\.ht {
-        deny all;
-    }
-}
-EOF
 
 # Generate app key
 RUN php artisan key:generate --force || true
