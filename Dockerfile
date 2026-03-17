@@ -1,6 +1,5 @@
 FROM php:8.2-fpm
 
-# Force rebuild - 2026-03-16
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
@@ -35,7 +34,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     npm install && \
     npm run build
 
-# Configure Nginx
+# Configure Nginx to use Unix socket
 RUN cat > /etc/nginx/sites-available/default <<'EOF'
 server {
     listen 80 default_server;
@@ -47,30 +46,14 @@ server {
     }
     
     location ~ \.php$ {
-        fastcgi_pass 127.0.0.1:9000;
-        fastcgi_index index.php;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        include fastcgi_params;
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
     }
     
     location ~ /\.ht {
         deny all;
     }
 }
-EOF
-
-# Configure PHP-FPM to listen on TCP
-RUN cat > /usr/local/etc/php-fpm.d/www.conf <<'EOF'
-[www]
-listen = 127.0.0.1:9000
-listen.allowed_clients = 127.0.0.1
-user = www-data
-group = www-data
-pm = dynamic
-pm.max_children = 5
-pm.start_servers = 2
-pm.min_spare_servers = 1
-pm.max_spare_servers = 3
 EOF
 
 # Generate app key
