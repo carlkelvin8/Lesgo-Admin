@@ -15,5 +15,8 @@ php artisan cache:clear 2>&1 || true
 php artisan config:clear 2>&1 || true
 
 echo ""
-echo "Starting services with supervisor..."
-exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+echo "Starting PHP-FPM..."
+php-fpm -D
+
+echo "Starting Nginx..."
+exec nginx -g "daemon off;"

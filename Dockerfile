@@ -8,8 +8,7 @@ RUN apk add --no-cache \
     libpq-dev \
     libzip-dev \
     icu-dev \
-    nginx \
-    supervisor
+    nginx
 
 # Install PHP extensions
 RUN docker-php-ext-install \
@@ -76,24 +75,6 @@ pm.max_children = 5
 pm.start_servers = 2
 pm.min_spare_servers = 1
 pm.max_spare_servers = 3
-EOF
-
-# Configure Supervisor
-RUN mkdir -p /etc/supervisor/conf.d && \
-    cat > /etc/supervisor/conf.d/services.conf <<'EOF'
-[program:php-fpm]
-command=/usr/local/sbin/php-fpm -F
-autostart=true
-autorestart=true
-stderr_logfile=/var/log/php-fpm.err.log
-stdout_logfile=/var/log/php-fpm.out.log
-
-[program:nginx]
-command=/usr/sbin/nginx -g "daemon off;"
-autostart=true
-autorestart=true
-stderr_logfile=/var/log/nginx.err.log
-stdout_logfile=/var/log/nginx.out.log
 EOF
 
 # Generate app key
