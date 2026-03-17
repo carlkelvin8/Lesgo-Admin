@@ -1,10 +1,12 @@
 #!/bin/bash
+set -e
 
-echo "Starting PHP-FPM..."
-php-fpm -D
+echo "Starting PHP-FPM in background..."
+/usr/local/sbin/php-fpm --nodaemonize &
+PHP_FPM_PID=$!
 
-echo "Waiting for PHP-FPM to start..."
-sleep 2
+echo "Waiting for PHP-FPM to be ready..."
+sleep 3
 
-echo "Starting Nginx..."
-nginx -g "daemon off;"
+echo "Starting Nginx in foreground..."
+exec nginx -g "daemon off;"
