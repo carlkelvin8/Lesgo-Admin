@@ -6,15 +6,13 @@ use Filament\Pages\Auth\Login as BaseLogin;
 
 class Login extends BaseLogin
 {
-    protected static string $view = 'filament.pages.auth.login';
-    
     public function getHeading(): string
     {
-        return '';
+        return 'Welcome Back';
     }
-    
-    public function hasLogo(): bool
+
+    public function getSubheading(): ?string
     {
-        return false;
+        return 'Lesgo Admin — Premium Logistics Suite';
     }
 }
