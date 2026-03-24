@@ -8,6 +8,7 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class UserActivityWidget extends BaseWidget
 {
+    protected static bool $isLazy = true;
     protected static ?int $sort = 5;
     
     protected int | string | array $columnSpan = [

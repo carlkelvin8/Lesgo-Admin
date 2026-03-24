@@ -14,4 +14,24 @@ class ListPartners extends ListRecords
     {
         return [Actions\CreateAction::make()];
     }
+
+    protected function getTableRecordsPerPageSelectOptions(): array
+    {
+        return [10, 25, 50, 100];
+    }
+
+    protected function getTableFiltersLayout(): ?string
+    {
+        return \Filament\Tables\Enums\FiltersLayout::AboveContent;
+    }
+
+    protected function getTableDeferredLoading(): bool
+    {
+        return true;
+    }
+
+    protected function getGlobalSearchDebounce(): string
+    {
+        return '500ms';
+    }
 }

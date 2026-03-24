@@ -4,9 +4,11 @@ namespace App\Filament\Widgets;
 
 use App\Models\Order;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Support\Facades\Cache;
 
 class OrderStatusChart extends ChartWidget
 {
+    protected static bool $isLazy = true;
     protected static ?string $heading = 'Order Status Distribution';
     protected static ?string $description = 'Current order pipeline breakdown';
     protected static ?int $sort = 4;
@@ -23,31 +25,33 @@ class OrderStatusChart extends ChartWidget
 
     protected function getData(): array
     {
-        $pending = Order::where('status', 'pending')->count();
-        $accepted = Order::where('status', 'accepted')->count();
-        $pickedUp = Order::where('status', 'picked_up')->count();
-        $completed = Order::where('status', 'completed')->count();
-        $cancelled = Order::where('status', 'cancelled')->count();
+        return Cache::remember('order_status_chart', 60, function () {
+            $pending = Order::where('status', 'pending')->count();
+            $accepted = Order::where('status', 'accepted')->count();
+            $pickedUp = Order::where('status', 'picked_up')->count();
+            $completed = Order::where('status', 'completed')->count();
+            $cancelled = Order::where('status', 'cancelled')->count();
 
-        return [
-            'datasets' => [
-                [
-                    'label' => 'Orders',
-                    'data' => [$pending, $accepted, $pickedUp, $completed, $cancelled],
-                    'backgroundColor' => [
-                        'rgba(251, 191, 36, 0.9)',  // warning - pending
-                        'rgba(59, 130, 246, 0.9)',  // info - accepted
-                        'rgba(168, 85, 247, 0.9)',  // primary - picked_up
-                        'rgba(34, 197, 94, 0.9)',   // success - completed
-                        'rgba(239, 68, 68, 0.9)',   // danger - cancelled
+            return [
+                'datasets' => [
+                    [
+                        'label' => 'Orders',
+                        'data' => [$pending, $accepted, $pickedUp, $completed, $cancelled],
+                        'backgroundColor' => [
+                            'rgba(251, 191, 36, 0.9)',  // warning - pending
+                            'rgba(59, 130, 246, 0.9)',  // info - accepted
+                            'rgba(168, 85, 247, 0.9)',  // primary - picked_up
+                            'rgba(34, 197, 94, 0.9)',   // success - completed
+                            'rgba(239, 68, 68, 0.9)',   // danger - cancelled
+                        ],
+                        'borderColor' => '#fff',
+                        'borderWidth' => 3,
+                        'hoverOffset' => 15,
                     ],
-                    'borderColor' => '#fff',
-                    'borderWidth' => 3,
-                    'hoverOffset' => 15,
                 ],
-            ],
-            'labels' => ['Pending', 'Accepted', 'Picked Up', 'Completed', 'Cancelled'],
-        ];
+                'labels' => ['Pending', 'Accepted', 'Picked Up', 'Completed', 'Cancelled'],
+            ];
+        });
     }
 
     protected function getType(): string

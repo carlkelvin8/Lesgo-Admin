@@ -4,10 +4,11 @@ namespace App\Filament\Widgets;
 
 use App\Models\Order;
 use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class OrdersChart extends ChartWidget
 {
+    protected static bool $isLazy = true;
     protected static ?string $heading = 'Orders Overview';
     protected static ?string $description = 'Monthly order volume trends';
     protected static ?int $sort = 2;
@@ -24,29 +25,31 @@ class OrdersChart extends ChartWidget
 
     protected function getData(): array
     {
-        $data = $this->getOrdersPerMonth();
+        return Cache::remember('orders_chart', 60, function () {
+            $data = $this->getOrdersPerMonth();
 
-        return [
-            'datasets' => [
-                [
-                    'label' => 'Orders',
-                    'data' => $data['ordersPerMonth'],
-                    'backgroundColor' => 'rgba(56, 189, 248, 0.1)',
-                    'borderColor' => 'rgba(56, 189, 248, 1)',
-                    'borderWidth' => 3,
-                    'fill' => true,
-                    'tension' => 0.4,
-                    'pointRadius' => 4,
-                    'pointHoverRadius' => 6,
-                    'pointBackgroundColor' => 'rgba(56, 189, 248, 1)',
-                    'pointBorderColor' => '#fff',
-                    'pointBorderWidth' => 2,
-                    'pointHoverBackgroundColor' => '#fff',
-                    'pointHoverBorderColor' => 'rgba(56, 189, 248, 1)',
+            return [
+                'datasets' => [
+                    [
+                        'label' => 'Orders',
+                        'data' => $data['ordersPerMonth'],
+                        'backgroundColor' => 'rgba(56, 189, 248, 0.1)',
+                        'borderColor' => 'rgba(56, 189, 248, 1)',
+                        'borderWidth' => 3,
+                        'fill' => true,
+                        'tension' => 0.4,
+                        'pointRadius' => 4,
+                        'pointHoverRadius' => 6,
+                        'pointBackgroundColor' => 'rgba(56, 189, 248, 1)',
+                        'pointBorderColor' => '#fff',
+                        'pointBorderWidth' => 2,
+                        'pointHoverBackgroundColor' => '#fff',
+                        'pointHoverBorderColor' => 'rgba(56, 189, 248, 1)',
+                    ],
                 ],
-            ],
-            'labels' => $data['months'],
-        ];
+                'labels' => $data['months'],
+            ];
+        });
     }
 
     protected function getType(): string
@@ -119,7 +122,7 @@ class OrdersChart extends ChartWidget
 
     private function getOrdersPerMonth(): array
     {
-        $now = Carbon::now();
+        $now = now();
         $months = [];
         $ordersPerMonth = [];
 

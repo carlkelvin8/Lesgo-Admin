@@ -10,10 +10,17 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Cache;
 
 class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
+    
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with(['customer', 'service', 'partner']);
+    }
+
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
     protected static ?string $navigationGroup = 'Operations';
     protected static ?int $navigationSort = 1;
@@ -203,11 +210,13 @@ class OrderResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::where('status', 'pending')->count();
+        return Cache::remember('pending_orders_count', 60, function () {
+            return static::getModel()::where('status', 'pending')->count();
+        });
     }
 
     public static function getNavigationBadgeColor(): ?string
     {
-        return static::getModel()::where('status', 'pending')->count() > 0 ? 'warning' : 'success';
+        return static::getNavigationBadge() > 0 ? 'warning' : 'success';
     }
 }

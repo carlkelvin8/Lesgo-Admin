@@ -13,6 +13,7 @@ class DriverProfile extends Model
         'user_id',
         'partner_id',
         'status',
+        'commission_rate',
         'rating',
         'total_trips',
         'license_number',
@@ -24,6 +25,7 @@ class DriverProfile extends Model
 
     protected $casts = [
         'license_expiry_date' => 'date',
+        'commission_rate' => 'decimal:2',
         'rating' => 'decimal:2',
         'last_latitude' => 'decimal:7',
         'last_longitude' => 'decimal:7',

@@ -5,9 +5,11 @@ namespace App\Filament\Widgets;
 use App\Models\Payment;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class RevenueChart extends ChartWidget
 {
+    protected static bool $isLazy = true;
     protected static ?string $heading = 'Revenue Trend';
     protected static ?string $description = 'Monthly revenue performance';
     protected static ?int $sort = 3;
@@ -24,48 +26,50 @@ class RevenueChart extends ChartWidget
 
     protected function getData(): array
     {
-        $data = $this->getRevenuePerMonth();
+        return Cache::remember('revenue_chart', 60, function () {
+            $data = $this->getRevenuePerMonth();
 
-        return [
-            'datasets' => [
-                [
-                    'label' => 'Revenue (₱)',
-                    'data' => $data['revenuePerMonth'],
-                    'backgroundColor' => [
-                        'rgba(34, 197, 94, 0.8)',
-                        'rgba(34, 197, 94, 0.8)',
-                        'rgba(34, 197, 94, 0.8)',
-                        'rgba(34, 197, 94, 0.8)',
-                        'rgba(34, 197, 94, 0.8)',
-                        'rgba(34, 197, 94, 0.8)',
-                        'rgba(34, 197, 94, 0.8)',
-                        'rgba(34, 197, 94, 0.8)',
-                        'rgba(34, 197, 94, 0.8)',
-                        'rgba(34, 197, 94, 0.8)',
-                        'rgba(34, 197, 94, 0.8)',
-                        'rgba(56, 189, 248, 0.9)', // Current month highlighted
+            return [
+                'datasets' => [
+                    [
+                        'label' => 'Revenue (₱)',
+                        'data' => $data['revenuePerMonth'],
+                        'backgroundColor' => [
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(56, 189, 248, 0.9)', // Current month highlighted
+                        ],
+                        'borderColor' => [
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(56, 189, 248, 1)',
+                        ],
+                        'borderWidth' => 2,
+                        'borderRadius' => 8,
+                        'borderSkipped' => false,
                     ],
-                    'borderColor' => [
-                        'rgba(34, 197, 94, 1)',
-                        'rgba(34, 197, 94, 1)',
-                        'rgba(34, 197, 94, 1)',
-                        'rgba(34, 197, 94, 1)',
-                        'rgba(34, 197, 94, 1)',
-                        'rgba(34, 197, 94, 1)',
-                        'rgba(34, 197, 94, 1)',
-                        'rgba(34, 197, 94, 1)',
-                        'rgba(34, 197, 94, 1)',
-                        'rgba(34, 197, 94, 1)',
-                        'rgba(34, 197, 94, 1)',
-                        'rgba(56, 189, 248, 1)',
-                    ],
-                    'borderWidth' => 2,
-                    'borderRadius' => 8,
-                    'borderSkipped' => false,
                 ],
-            ],
-            'labels' => $data['months'],
-        ];
+                'labels' => $data['months'],
+            ];
+        });
     }
 
     protected function getType(): string

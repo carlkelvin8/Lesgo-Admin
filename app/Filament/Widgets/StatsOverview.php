@@ -9,8 +9,12 @@ use App\Models\Payment;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+
 class StatsOverview extends BaseWidget
 {
+    protected static bool $isLazy = true;
     protected static ?int $sort = 1;
     
     protected int | string | array $columnSpan = [
@@ -24,131 +28,83 @@ class StatsOverview extends BaseWidget
 
     protected function getStats(): array
     {
-        $totalOrders = Order::count();
-        $completedOrders = Order::where('status', 'completed')->count();
-        $pendingOrders = Order::where('status', 'pending')->count();
-        $totalRevenue = Payment::where('status', 'paid')->sum('amount');
-        $todayRevenue = Payment::where('status', 'paid')
-            ->whereDate('created_at', today())
-            ->sum('amount');
-        $activePartners = Partner::where('status', 'active')->count();
-        
-        // Calculate trends
-        $lastMonthOrders = Order::whereBetween('created_at', [now()->subMonth(), now()])->count();
-        $previousMonthOrders = Order::whereBetween('created_at', [now()->subMonths(2), now()->subMonth()])->count();
-        $orderTrend = $previousMonthOrders > 0 ? (($lastMonthOrders - $previousMonthOrders) / $previousMonthOrders) * 100 : 0;
-        
-        $lastMonthRevenue = Payment::where('status', 'paid')
-            ->whereBetween('created_at', [now()->subMonth(), now()])
-            ->sum('amount');
-        $previousMonthRevenue = Payment::where('status', 'paid')
-            ->whereBetween('created_at', [now()->subMonths(2), now()->subMonth()])
-            ->sum('amount');
-        $revenueTrend = $previousMonthRevenue > 0 ? (($lastMonthRevenue - $previousMonthRevenue) / $previousMonthRevenue) * 100 : 0;
-        
-        return [
-            Stat::make('Total Orders', number_format($totalOrders))
-                ->description(($orderTrend >= 0 ? '+' : '') . number_format($orderTrend, 1) . '% from last month')
-                ->descriptionIcon($orderTrend >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
-                ->color($orderTrend >= 0 ? 'success' : 'danger')
-                ->chart($this->getOrderTrendData()),
+        return Cache::remember('stats_overview', 60, function () {
+            // Consolidated query for orders and payments
+            $sevenDaysAgo = now()->subDays(6)->startOfDay();
             
-            Stat::make('Pending Orders', number_format($pendingOrders))
-                ->description($pendingOrders > 20 ? 'High volume - needs attention' : 'Normal volume')
-                ->descriptionIcon('heroicon-m-clock')
-                ->color($pendingOrders > 20 ? 'warning' : 'success')
-                ->chart($this->getPendingTrendData()),
-            
-            Stat::make('Completed Orders', number_format($completedOrders))
-                ->description(number_format(($completedOrders / max($totalOrders, 1)) * 100, 1) . '% completion rate')
-                ->descriptionIcon('heroicon-m-check-circle')
-                ->color('success')
-                ->chart($this->getCompletedTrendData()),
-            
-            Stat::make('Total Revenue', '₱' . number_format($totalRevenue, 2))
-                ->description(($revenueTrend >= 0 ? '+' : '') . number_format($revenueTrend, 1) . '% from last month')
-                ->descriptionIcon($revenueTrend >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
-                ->color($revenueTrend >= 0 ? 'success' : 'danger')
-                ->chart($this->getRevenueTrendData()),
-            
-            Stat::make('Today\'s Revenue', '₱' . number_format($todayRevenue, 2))
-                ->description('Earnings today')
-                ->descriptionIcon('heroicon-m-banknotes')
-                ->color('primary')
-                ->chart($this->getTodayRevenueTrendData()),
-            
-            Stat::make('Active Partners', number_format($activePartners))
-                ->description('Verified and active')
-                ->descriptionIcon('heroicon-m-building-office-2')
-                ->color('info')
-                ->chart($this->getPartnerTrendData()),
-        ];
-    }
-    
-    private function getOrderTrendData(): array
-    {
-        $data = [];
-        for ($i = 6; $i >= 0; $i--) {
-            $data[] = Order::whereDate('created_at', now()->subDays($i))->count();
-        }
-        return $data;
-    }
-    
-    private function getPendingTrendData(): array
-    {
-        $data = [];
-        for ($i = 6; $i >= 0; $i--) {
-            $data[] = Order::where('status', 'pending')
-                ->whereDate('created_at', now()->subDays($i))
-                ->count();
-        }
-        return $data;
-    }
-    
-    private function getCompletedTrendData(): array
-    {
-        $data = [];
-        for ($i = 6; $i >= 0; $i--) {
-            $data[] = Order::where('status', 'completed')
-                ->whereDate('created_at', now()->subDays($i))
-                ->count();
-        }
-        return $data;
-    }
-    
-    private function getRevenueTrendData(): array
-    {
-        $data = [];
-        for ($i = 6; $i >= 0; $i--) {
-            $data[] = (float) Payment::where('status', 'paid')
-                ->whereDate('created_at', now()->subDays($i))
-                ->sum('amount');
-        }
-        return $data;
-    }
-    
-    private function getTodayRevenueTrendData(): array
-    {
-        $data = [];
-        for ($i = 23; $i >= 0; $i--) {
-            $data[] = (float) Payment::where('status', 'paid')
-                ->whereBetween('created_at', [
-                    now()->subHours($i + 1),
-                    now()->subHours($i)
-                ])
-                ->sum('amount');
-        }
-        return $data;
-    }
-    
-    private function getPartnerTrendData(): array
-    {
-        $data = [];
-        for ($i = 6; $i >= 0; $i--) {
-            $data[] = Partner::where('status', 'active')
-                ->whereDate('created_at', '<=', now()->subDays($i))
-                ->count();
-        }
-        return $data;
+            $orderStats = Order::select(
+                    DB::raw('COUNT(*) as total'),
+                    DB::raw('SUM(CASE WHEN status = \'completed\' THEN 1 ELSE 0 END) as completed'),
+                    DB::raw('SUM(CASE WHEN status = \'pending\' THEN 1 ELSE 0 END) as pending'),
+                    DB::raw('DATE(created_at) as date')
+                )
+                ->where('created_at', '>=', $sevenDaysAgo)
+                ->groupBy('date')
+                ->orderBy('date', 'asc')
+                ->get()
+                ->keyBy('date');
+
+            $paymentStats = Payment::select(
+                    DB::raw('SUM(amount) as total_revenue'),
+                    DB::raw('DATE(created_at) as date')
+                )
+                ->where('status', 'paid')
+                ->where('created_at', '>=', $sevenDaysAgo)
+                ->groupBy('date')
+                ->orderBy('date', 'asc')
+                ->get()
+                ->keyBy('date');
+
+            $dailyOrderCounts = [];
+            $dailyPendingCounts = [];
+            $dailyCompletedCounts = [];
+            $dailyRevenue = [];
+
+            for ($i = 6; $i >= 0; $i--) {
+                $date = now()->subDays($i)->toDateString();
+                $dailyOrderCounts[] = $orderStats[$date]->total ?? 0;
+                $dailyPendingCounts[] = $orderStats[$date]->pending ?? 0;
+                $dailyCompletedCounts[] = $orderStats[$date]->completed ?? 0;
+                $dailyRevenue[] = (float) ($paymentStats[$date]->total_revenue ?? 0);
+            }
+
+            $totalOrders = array_sum($dailyOrderCounts);
+            $totalPending = array_sum($dailyPendingCounts);
+            $totalCompleted = array_sum($dailyCompletedCounts);
+            $totalRevenue = array_sum($dailyRevenue);
+
+            $activePartners = Partner::where('status', 'active')->count();
+            $todayRevenue = (float) Payment::where('status', 'paid')->whereDate('created_at', today())->sum('amount');
+
+            return [
+                Stat::make('Total Orders', number_format($totalOrders))
+                    ->description('Last 7 days')
+                    ->color('success')
+                    ->chart($dailyOrderCounts),
+                
+                Stat::make('Pending Orders', number_format($totalPending))
+                    ->description('Last 7 days')
+                    ->color('warning')
+                    ->chart($dailyPendingCounts),
+                
+                Stat::make('Completed Orders', number_format($totalCompleted))
+                    ->description('Last 7 days')
+                    ->color('success')
+                    ->chart($dailyCompletedCounts),
+                
+                Stat::make('Total Revenue', '₱' . number_format($totalRevenue, 2))
+                    ->description('Last 7 days')
+                    ->color('success')
+                    ->chart($dailyRevenue),
+                
+                Stat::make('Today\'s Revenue', '₱' . number_format($todayRevenue, 2))
+                    ->description('Live earnings')
+                    ->color('primary'),
+                
+                Stat::make('Active Partners', number_format($activePartners))
+                    ->description('Verified partners')
+                    ->color('info'),
+            ];
+        });
     }
 }

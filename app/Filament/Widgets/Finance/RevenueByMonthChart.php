@@ -8,6 +8,7 @@ use Illuminate\Support\Carbon;
 
 class RevenueByMonthChart extends ChartWidget
 {
+    protected static bool $isLazy = true;
     protected static ?string $heading = 'Revenue by Month';
     protected static ?string $description = '12-month revenue trend';
     protected static ?int $sort = 2;

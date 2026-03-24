@@ -9,10 +9,17 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class DriverProfileResource extends Resource
 {
     protected static ?string $model = DriverProfile::class;
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with(['user', 'partner']);
+    }
+
     protected static ?string $navigationIcon = 'heroicon-o-truck';
     protected static ?string $navigationGroup = 'User Management';
     protected static ?int $navigationSort = 2;
@@ -44,6 +51,14 @@ class DriverProfileResource extends Resource
                             'suspended' => 'Suspended',
                         ])
                         ->default('pending'),
+                    Forms\Components\TextInput::make('commission_rate')
+                        ->label('Commission Rate (%)')
+                        ->numeric()
+                        ->minValue(0)
+                        ->maxValue(100)
+                        ->default(0)
+                        ->suffix('%')
+                        ->helperText('The percentage of commission this rider gets per transaction.'),
                     Forms\Components\TextInput::make('rating')
                         ->numeric()
                         ->minValue(0)
@@ -80,6 +95,11 @@ class DriverProfileResource extends Resource
                         'gray' => 'inactive',
                         'danger' => 'suspended',
                     ]),
+                Tables\Columns\TextColumn::make('commission_rate')
+                    ->label('Commission')
+                    ->suffix('%')
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('rating')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('total_trips')

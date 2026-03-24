@@ -7,6 +7,7 @@ use Filament\Widgets\ChartWidget;
 
 class PaymentMethodsChart extends ChartWidget
 {
+    protected static bool $isLazy = true;
     protected static ?string $heading = 'Payment Methods Distribution';
     protected static ?string $description = 'Revenue by payment method';
     protected static ?int $sort = 3;

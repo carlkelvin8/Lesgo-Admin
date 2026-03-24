@@ -29,8 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->login(\App\Filament\Pages\Auth\Login::class)
             ->brandName('Lesgo Admin')
             ->brandLogo(asset('images/logo.svg'))
-            ->brandLogoHeight('2rem')
-            ->favicon(asset('images/favicon.png'))
+            ->brandLogoHeight('2.5rem')
             ->colors([
                 'primary' => Color::Sky,
                 'danger' => Color::Red,

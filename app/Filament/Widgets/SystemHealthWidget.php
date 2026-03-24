@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class SystemHealthWidget extends Widget
 {
+    protected static bool $isLazy = true;
     protected static string $view = 'filament.widgets.system-health-widget';
     protected static ?int $sort = 6;
     
@@ -33,7 +34,7 @@ class SystemHealthWidget extends Widget
         $avgOrderTime = Order::where('status', 'completed')
             ->whereNotNull('completed_at')
             ->whereNotNull('created_at')
-            ->selectRaw('AVG(EXTRACT(EPOCH FROM (completed_at - created_at))/60) as avg_minutes')
+            ->selectRaw('AVG(TIMESTAMPDIFF(MINUTE, created_at, completed_at)) as avg_minutes')
             ->value('avg_minutes');
 
         return [
@@ -81,8 +82,27 @@ class SystemHealthWidget extends Widget
     protected function getDatabaseSize(): string
     {
         try {
-            $size = DB::select("SELECT pg_size_pretty(pg_database_size(current_database())) as size")[0]->size ?? 'N/A';
-            return $size;
+            $driver = DB::connection()->getDriverName();
+            
+            if ($driver === 'pgsql') {
+                return DB::select("SELECT pg_size_pretty(pg_database_size(current_database())) as size")[0]->size ?? 'N/A';
+            }
+
+            if ($driver === 'mysql') {
+                $dbName = DB::connection()->getDatabaseName();
+                $size = DB::select("SELECT ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) AS size FROM information_schema.TABLES WHERE table_schema = ?", [$dbName])[0]->size ?? 'N/A';
+                return $size . ' MB';
+            }
+
+            if ($driver === 'sqlite') {
+                $dbPath = DB::connection()->getDatabaseName();
+                if (file_exists($dbPath)) {
+                    $sizeBytes = filesize($dbPath);
+                    return round($sizeBytes / 1024 / 1024, 2) . ' MB';
+                }
+            }
+
+            return 'N/A';
         } catch (\Exception $e) {
             return 'N/A';
         }
