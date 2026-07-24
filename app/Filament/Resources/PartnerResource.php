@@ -144,6 +144,39 @@ class PartnerResource extends Resource
                         ->label('Cuisine Types')
                         ->nullable(),
                 ])->columns(2),
+
+            Forms\Components\Section::make('Merchant Documents')
+                ->description('Documents submitted by the merchant for verification (selfie, valid ID, digital signature, permits)')
+                ->schema([
+                    Forms\Components\FileUpload::make('documents.selfie')
+                        ->label('Selfie')
+                        ->disk('s3')
+                        ->directory('partner-documents')
+                        ->image()
+                        ->openable()
+                        ->downloadable(),
+                    Forms\Components\FileUpload::make('documents.valid_id')
+                        ->label('Valid ID')
+                        ->disk('s3')
+                        ->directory('partner-documents')
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
+                        ->openable()
+                        ->downloadable(),
+                    Forms\Components\FileUpload::make('documents.digital_signature')
+                        ->label('Digital Signature')
+                        ->disk('s3')
+                        ->directory('partner-documents')
+                        ->image()
+                        ->openable()
+                        ->downloadable(),
+                    Forms\Components\FileUpload::make('documents.permits')
+                        ->label('Business Permits')
+                        ->disk('s3')
+                        ->directory('partner-documents')
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
+                        ->openable()
+                        ->downloadable(),
+                ])->columns(2),
         ]);
     }
 
