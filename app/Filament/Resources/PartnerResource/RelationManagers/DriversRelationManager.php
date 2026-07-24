@@ -54,7 +54,8 @@ class DriversRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Driver Name'),
                 Tables\Columns\TextColumn::make('license_number'),
-                Tables\Columns\BadgeColumn::make('status')
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
                     ->colors([
                         'warning' => 'pending',
                         'success' => 'active',
@@ -89,3 +90,5 @@ class DriversRelationManager extends RelationManager
             ]);
     }
 }
+
+

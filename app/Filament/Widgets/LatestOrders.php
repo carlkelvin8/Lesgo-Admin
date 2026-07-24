@@ -54,7 +54,8 @@ class LatestOrders extends BaseWidget
                     ->default('Not assigned')
                     ->icon('heroicon-m-truck')
                     ->toggleable(),
-                Tables\Columns\BadgeColumn::make('status')
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
                     ->label('Status')
                     ->colors([
                         'warning' => 'pending',
@@ -76,7 +77,8 @@ class LatestOrders extends BaseWidget
                     ->sortable()
                     ->weight('semibold')
                     ->color('success'),
-                Tables\Columns\BadgeColumn::make('payment_status')
+                Tables\Columns\TextColumn::make('payment_status')
+                    ->badge()
                     ->label('Payment')
                     ->colors([
                         'warning' => 'pending',
@@ -102,3 +104,5 @@ class LatestOrders extends BaseWidget
             ->striped();
     }
 }
+
+

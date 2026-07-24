@@ -72,7 +72,8 @@ class VehiclesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('plate_number'),
                 Tables\Columns\TextColumn::make('brand'),
                 Tables\Columns\TextColumn::make('model'),
-                Tables\Columns\BadgeColumn::make('status')
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
                     ->colors([
                         'success' => 'active',
                         'gray' => 'inactive',
@@ -111,3 +112,5 @@ class VehiclesRelationManager extends RelationManager
             ]);
     }
 }
+
+

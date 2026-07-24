@@ -54,7 +54,8 @@ class PaymentsRelationManager extends RelationManager
                     ->money('PHP'),
                 Tables\Columns\TextColumn::make('method')
                     ->badge(),
-                Tables\Columns\BadgeColumn::make('status')
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
                     ->colors([
                         'warning' => 'pending',
                         'success' => 'paid',
@@ -81,3 +82,5 @@ class PaymentsRelationManager extends RelationManager
             ]);
     }
 }
+
+
