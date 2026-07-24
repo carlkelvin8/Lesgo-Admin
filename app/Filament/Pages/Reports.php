@@ -45,7 +45,7 @@ class Reports extends Page
             'drivers' => [
                 'total' => DriverProfile::count(),
                 'active' => DriverProfile::where('status', 'active')->count(),
-                'available' => DriverProfile::where('availability_status', 'available')->count(),
+                'available' => DriverProfile::where('status', 'active')->count(),
             ],
         ];
     }
