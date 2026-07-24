@@ -44,7 +44,64 @@ class AdminPanelProvider extends PanelProvider
             ->theme(asset('css/filament/admin/theme.css'))
             ->maxContentWidth('full')
             ->sidebarCollapsibleOnDesktop()
-            ->sidebarWidth('16rem')
+            ->sidebarWidth('15rem')
+            ->renderHook(
+                'panels::head.end',
+                fn (): string => '<style>
+                    /* Minimal Sidebar */
+                    .fi-sidebar {
+                        border-right: 1px solid rgba(148, 163, 184, 0.1) !important;
+                    }
+                    .fi-sidebar-nav-groups {
+                        gap: 0.25rem !important;
+                    }
+                    .fi-sidebar-group-label {
+                        font-size: 0.65rem !important;
+                        font-weight: 600 !important;
+                        letter-spacing: 0.08em !important;
+                        text-transform: uppercase !important;
+                        opacity: 0.5 !important;
+                        padding: 0.5rem 0.75rem 0.25rem !important;
+                    }
+                    .fi-sidebar-item-button {
+                        border-radius: 0.5rem !important;
+                        padding: 0.5rem 0.75rem !important;
+                        font-size: 0.8rem !important;
+                        font-weight: 500 !important;
+                        transition: all 0.15s ease !important;
+                    }
+                    .fi-sidebar-item-button:hover {
+                        background: rgba(139, 92, 246, 0.08) !important;
+                    }
+                    .fi-sidebar-item-active .fi-sidebar-item-button {
+                        background: rgba(139, 92, 246, 0.12) !important;
+                        color: rgb(139, 92, 246) !important;
+                        font-weight: 600 !important;
+                    }
+                    .fi-sidebar-item-icon {
+                        width: 1.1rem !important;
+                        height: 1.1rem !important;
+                        opacity: 0.7 !important;
+                    }
+                    .fi-sidebar-item-active .fi-sidebar-item-icon {
+                        opacity: 1 !important;
+                        color: rgb(139, 92, 246) !important;
+                    }
+                    /* Clean table rows */
+                    .fi-ta-row {
+                        transition: background 0.1s ease !important;
+                    }
+                    .fi-ta-row:hover {
+                        background: rgba(139, 92, 246, 0.03) !important;
+                    }
+                    /* Subtle cards */
+                    .fi-section {
+                        border-radius: 0.75rem !important;
+                        border: 1px solid rgba(148, 163, 184, 0.15) !important;
+                        box-shadow: none !important;
+                    }
+                </style>'
+            )
             ->navigationGroups([
                 'Dashboard',
                 'User Management',
