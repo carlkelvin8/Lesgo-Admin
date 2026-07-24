@@ -11,14 +11,7 @@ class RevenueStatsWidget extends BaseWidget
     protected static bool $isLazy = true;
     protected static ?int $sort = 1;
 
-    protected int | string | array $columnSpan = [
-        'default' => 1,
-        'sm' => 2,
-        'md' => 3,
-        'lg' => 4,
-        'xl' => 6,
-        '2xl' => 8,
-    ];
+    protected int | string | array $columnSpan = 'full';
 
     protected function getStats(): array
     {
