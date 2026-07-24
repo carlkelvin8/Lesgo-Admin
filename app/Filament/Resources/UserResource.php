@@ -93,9 +93,10 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('avatar')
+                Tables\Columns\ImageColumn::make('profile_picture')
                     ->label('')
                     ->circular()
+                    ->disk('s3')
                     ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->name) . '&color=38BDF8&background=F0F9FF'),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
