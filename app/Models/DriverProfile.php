@@ -11,20 +11,24 @@ class DriverProfile extends Model
 
     protected $fillable = [
         'user_id',
+        'partner_id',
         'status',
-        'commission_rate',
         'rating',
         'total_trips',
         'license_number',
         'license_expiry_date',
+        'vehicle_type',
+        'plate_number',
+        'last_latitude',
+        'last_longitude',
+        'commission_rate',
+        'package_tier',
         'id_document_path',
         'clearance_document_path',
         'license_document_path',
         'biodata_document_path',
         'motor_registration_path',
         'motor_or_path',
-        'last_latitude',
-        'last_longitude',
     ];
 
     protected $casts = [
@@ -38,6 +42,11 @@ class DriverProfile extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function partner()
+    {
+        return $this->belongsTo(Partner::class);
     }
 
     public function vehicles()

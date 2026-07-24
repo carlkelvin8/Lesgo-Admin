@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Filament\Models\Contracts\FilamentUser;
@@ -10,7 +11,7 @@ use Filament\Panel;
 
 class User extends Authenticatable implements FilamentUser
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -23,6 +24,19 @@ class User extends Authenticatable implements FilamentUser
         'banned_at',
         'ban_reason',
         'banned_by',
+        'date_of_birth',
+        'address_line1',
+        'address_line2',
+        'profile_photo_url',
+        'referral_code',
+        'referred_by',
+        'points',
+        'google_id',
+        'fcm_token',
+        'profile_picture',
+        'account_status',
+        'deactivated_at',
+        'deactivation_reason',
     ];
 
     protected $hidden = [
@@ -37,16 +51,17 @@ class User extends Authenticatable implements FilamentUser
             'password' => 'hashed',
             'is_banned' => 'boolean',
             'banned_at' => 'datetime',
+            'date_of_birth' => 'date',
+            'deactivated_at' => 'datetime',
         ];
     }
 
     public function canAccessPanel(Panel $panel): bool
     {
-        // Banned users cannot access the panel
         if ($this->is_banned) {
             return false;
         }
-        
+
         return in_array($this->role, ['admin', 'staff']);
     }
 

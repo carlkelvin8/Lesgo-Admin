@@ -16,9 +16,37 @@ class Partner extends Model
         'slug',
         'business_type',
         'tax_id',
-        'store_address',
+        'support_email',
         'support_phone',
         'status',
+        'logo_url',
+        'cover_image_url',
+        'description',
+        'category',
+        'tags',
+        'cuisine_types',
+        'rating',
+        'total_reviews',
+        'delivery_fee',
+        'min_order_amount',
+        'estimated_delivery_minutes',
+        'is_open',
+        'is_featured',
+        'accepts_online_payment',
+        'opening_hours',
+        'documents',
+    ];
+
+    protected $casts = [
+        'tags' => 'array',
+        'cuisine_types' => 'array',
+        'opening_hours' => 'array',
+        'documents' => 'array',
+        'rating' => 'decimal:2',
+        'delivery_fee' => 'decimal:2',
+        'is_open' => 'boolean',
+        'is_featured' => 'boolean',
+        'accepts_online_payment' => 'boolean',
     ];
 
     public function user()
@@ -49,5 +77,10 @@ class Partner extends Model
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function staff()
+    {
+        return $this->hasMany(PartnerStaff::class);
     }
 }

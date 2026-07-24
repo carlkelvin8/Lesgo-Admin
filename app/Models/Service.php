@@ -10,13 +10,20 @@ class Service extends Model
     use HasFactory;
 
     protected $fillable = [
+        'partner_id',
         'code',
         'name',
         'description',
         'base_fare',
         'per_km_rate',
         'per_minute_rate',
+        'minimum_fare',
         'is_active',
+        'icon_url',
+        'image_url',
+        'category',
+        'features',
+        'sort_order',
     ];
 
     protected $casts = [
@@ -24,7 +31,14 @@ class Service extends Model
         'base_fare' => 'decimal:2',
         'per_km_rate' => 'decimal:2',
         'per_minute_rate' => 'decimal:2',
+        'minimum_fare' => 'decimal:2',
+        'features' => 'array',
     ];
+
+    public function partner()
+    {
+        return $this->belongsTo(Partner::class);
+    }
 
     public function orders()
     {
