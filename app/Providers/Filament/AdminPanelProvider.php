@@ -40,7 +40,7 @@ class AdminPanelProvider extends PanelProvider
                 'success' => Color::Green,
                 'warning' => Color::Amber,
             ])
-            ->font('Inter')
+            ->font('Plus Jakarta Sans')
             ->theme(asset('css/filament/admin/theme.css'))
             ->maxContentWidth('full')
             ->sidebarCollapsibleOnDesktop()
@@ -99,6 +99,30 @@ class AdminPanelProvider extends PanelProvider
                         border-radius: 0.75rem !important;
                         border: 1px solid rgba(148, 163, 184, 0.15) !important;
                         box-shadow: none !important;
+                    }
+                    /* Empty state */
+                    .fi-ta-empty-state {
+                        padding: 3rem 1rem !important;
+                    }
+                    .fi-ta-empty-state-icon {
+                        opacity: 0.3 !important;
+                    }
+                    .fi-ta-empty-state-heading {
+                        font-size: 1rem !important;
+                        font-weight: 600 !important;
+                        color: rgba(100, 116, 139, 0.8) !important;
+                    }
+                    .fi-ta-empty-state-description {
+                        font-size: 0.8rem !important;
+                        opacity: 0.6 !important;
+                    }
+                    /* Form sections */
+                    .fi-fo-component-ctn {
+                        transition: all 0.15s ease !important;
+                    }
+                    /* Topbar */
+                    .fi-topbar {
+                        border-bottom: 1px solid rgba(148, 163, 184, 0.1) !important;
                     }
                 </style>'
             )

@@ -24,6 +24,11 @@ class OrderResource extends Resource
     protected static ?string $navigationGroup = 'Operations';
     protected static ?int $navigationSort = 1;
 
+    public static function getNavigationDescription(): ?string
+    {
+        return 'Track and manage all orders';
+    }
+
     public static function form(Form $form): Form
     {
         return $form->schema([

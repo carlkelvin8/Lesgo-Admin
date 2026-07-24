@@ -26,6 +26,11 @@ class PartnerResource extends Resource
     protected static ?int $navigationSort = 1;
     protected static ?string $recordTitleAttribute = 'name';
 
+    public static function getNavigationDescription(): ?string
+    {
+        return 'Manage merchants and stores';
+    }
+
     public static function form(Form $form): Form
     {
         return $form->schema([
@@ -34,13 +39,16 @@ class PartnerResource extends Resource
                     Forms\Components\TextInput::make('name')
                         ->required()
                         ->maxLength(255)
+                        ->prefixIcon('heroicon-o-building-office')
                         ->live(onBlur: true)
                         ->afterStateUpdated(fn (Forms\Set $set, ?string $state) => $set('slug', Str::slug($state))),
                     Forms\Components\TextInput::make('legal_name')
-                        ->maxLength(255),
+                        ->maxLength(255)
+                        ->prefixIcon('heroicon-o-document-text'),
                     Forms\Components\TextInput::make('slug')
                         ->unique(ignoreRecord: true)
-                        ->maxLength(255),
+                        ->maxLength(255)
+                        ->prefixIcon('heroicon-o-link'),
                     Forms\Components\Select::make('business_type')
                         ->options([
                             'logistics' => 'Logistics',
@@ -92,10 +100,12 @@ class PartnerResource extends Resource
                 ->schema([
                     Forms\Components\TextInput::make('support_email')
                         ->email()
-                        ->maxLength(255),
+                        ->maxLength(255)
+                        ->prefixIcon('heroicon-o-envelope'),
                     Forms\Components\TextInput::make('support_phone')
                         ->tel()
-                        ->maxLength(100),
+                        ->maxLength(100)
+                        ->prefixIcon('heroicon-o-phone'),
                     Forms\Components\Select::make('user_id')
                         ->label('Owner Account')
                         ->relationship('user', 'name')

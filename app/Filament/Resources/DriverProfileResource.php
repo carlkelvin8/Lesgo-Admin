@@ -25,6 +25,11 @@ class DriverProfileResource extends Resource
     protected static ?int $navigationSort = 2;
     protected static ?string $modelLabel = 'Driver';
 
+    public static function getNavigationDescription(): ?string
+    {
+        return 'Manage rider profiles and documents';
+    }
+
     public static function form(Form $form): Form
     {
         return $form->schema([

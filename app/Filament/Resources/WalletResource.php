@@ -17,6 +17,11 @@ class WalletResource extends Resource
     protected static ?string $navigationGroup = 'Finance';
     protected static ?int $navigationSort = 2;
 
+    public static function getNavigationDescription(): ?string
+    {
+        return 'View user wallet balances';
+    }
+
     public static function form(Form $form): Form
     {
         return $form->schema([
