@@ -49,7 +49,7 @@ class DriversRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('user.name')
+            ->recordTitleAttribute('id')
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Driver Name'),
