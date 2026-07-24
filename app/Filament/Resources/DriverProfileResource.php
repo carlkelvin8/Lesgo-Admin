@@ -17,7 +17,7 @@ class DriverProfileResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with(['user', 'partner']);
+        return parent::getEloquentQuery()->with(['user']);
     }
 
     protected static ?string $navigationIcon = 'heroicon-o-truck';
@@ -36,12 +36,6 @@ class DriverProfileResource extends Resource
                         ->searchable()
                         ->preload()
                         ->required(),
-                    Forms\Components\Select::make('partner_id')
-                        ->label('Partner')
-                        ->relationship('partner', 'name')
-                        ->searchable()
-                        ->preload()
-                        ->nullable(),
                     Forms\Components\Select::make('status')
                         ->required()
                         ->options([
@@ -73,6 +67,40 @@ class DriverProfileResource extends Resource
                     Forms\Components\DatePicker::make('license_expiry_date')
                         ->nullable(),
                 ])->columns(2),
+            Forms\Components\Section::make('Driver Requirements')
+                ->description('Upload JPG, PDF, or PNG files for driver registration')
+                ->schema([
+                    Forms\Components\FileUpload::make('clearance_document_path')
+                        ->label('Barangay / Police / NBI Clearance')
+                        ->directory('driver-requirements')
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
+                        ->maxSize(5120)
+                        ->required(),
+                    Forms\Components\FileUpload::make('license_document_path')
+                        ->label('Updated Driver\'s License')
+                        ->directory('driver-requirements')
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
+                        ->maxSize(5120)
+                        ->required(),
+                    Forms\Components\FileUpload::make('biodata_document_path')
+                        ->label('Updated Biodata/Resume')
+                        ->directory('driver-requirements')
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
+                        ->maxSize(5120)
+                        ->required(),
+                    Forms\Components\FileUpload::make('motor_registration_path')
+                        ->label('Motor Registration')
+                        ->directory('driver-requirements')
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
+                        ->maxSize(5120)
+                        ->required(),
+                    Forms\Components\FileUpload::make('motor_or_path')
+                        ->label('Motor Updated Official Receipt (OR)')
+                        ->directory('driver-requirements')
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
+                        ->maxSize(5120)
+                        ->required(),
+                ])->columns(2),
         ]);
     }
 
@@ -84,10 +112,6 @@ class DriverProfileResource extends Resource
                     ->label('Driver Name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('partner.name')
-                    ->label('Partner')
-                    ->searchable()
-                    ->toggleable(),
                 Tables\Columns\BadgeColumn::make('status')
                     ->colors([
                         'warning' => 'pending',
@@ -127,11 +151,15 @@ class DriverProfileResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()->requiresConfirmation(),
+                Tables\Actions\DeleteAction::make()
+                    ->requiresConfirmation()
+                    ->successNotificationTitle('Driver profile deleted successfully'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()->requiresConfirmation(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->successNotificationTitle('Selected driver profiles deleted successfully'),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');

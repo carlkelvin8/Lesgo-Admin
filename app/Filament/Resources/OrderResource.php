@@ -107,6 +107,19 @@ class OrderResource extends Resource
                         ->nullable()
                         ->columnSpanFull(),
                 ])->columns(2),
+            Forms\Components\Section::make('Delivery Evidence')
+                ->schema([
+                    Forms\Components\FileUpload::make('pickup_picture')
+                        ->label('Pick-up Picture')
+                        ->image()
+                        ->directory('order-evidence')
+                        ->visibility('public'),
+                    Forms\Components\FileUpload::make('dropoff_picture')
+                        ->label('Drop-off Picture')
+                        ->image()
+                        ->directory('order-evidence')
+                        ->visibility('public'),
+                ])->columns(2),
         ]);
     }
 

@@ -131,12 +131,14 @@ class PartnerResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
-                    ->requiresConfirmation(),
+                    ->requiresConfirmation()
+                    ->successNotificationTitle('Partner deleted successfully'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
-                        ->requiresConfirmation(),
+                        ->requiresConfirmation()
+                        ->successNotificationTitle('Selected partners deleted successfully'),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');
@@ -146,7 +148,6 @@ class PartnerResource extends Resource
     {
         return [
             PartnerResource\RelationManagers\BranchesRelationManager::class,
-            PartnerResource\RelationManagers\ServicesRelationManager::class,
             PartnerResource\RelationManagers\DriversRelationManager::class,
             PartnerResource\RelationManagers\VehiclesRelationManager::class,
         ];

@@ -133,15 +133,75 @@ class Settings extends Page
                                             ->numeric()
                                             ->default(10)
                                             ->prefix('₱'),
-                                        Forms\Components\TextInput::make('minimum_fare')
-                                            ->label('Minimum Fare (₱)')
+                                    ])->columns(2),
+
+                                Forms\Components\Section::make('Convenience Fee Bracketing (LesBuy & LesEat)')
+                                    ->description('These fees apply based on the purchase amount for shopping and food delivery services.')
+                                    ->schema([
+                                        Forms\Components\TextInput::make('conv_fee_low')
+                                            ->label('Fee for ₱1 - ₱499')
                                             ->numeric()
-                                            ->default(100)
+                                            ->default(15)
                                             ->prefix('₱'),
+                                        Forms\Components\TextInput::make('conv_fee_mid')
+                                            ->label('Fee for ₱500 - ₱999')
+                                            ->numeric()
+                                            ->default(30)
+                                            ->prefix('₱'),
+                                        Forms\Components\TextInput::make('conv_fee_high')
+                                            ->label('Fee for ₱1000 and above')
+                                            ->numeric()
+                                            ->default(45)
+                                            ->prefix('₱'),
+                                    ])->columns(3),
+
+                                Forms\Components\Section::make('Surge Pricing Settings')
+                                    ->schema([
                                         Forms\Components\Toggle::make('enable_surge_pricing')
                                             ->label('Enable Surge Pricing')
-                                            ->helperText('Allow dynamic pricing during peak hours')
-                                            ->default(false),
+                                            ->helperText('Allow dynamic pricing during peak hours or high demand')
+                                            ->default(false)
+                                            ->live(),
+                                        
+                                        Forms\Components\Group::make([
+                                            Forms\Components\TextInput::make('surge_multiplier')
+                                                ->label('Surge Multiplier (x)')
+                                                ->numeric()
+                                                ->default(1.2)
+                                                ->step(0.1)
+                                                ->minValue(1.0)
+                                                ->helperText('Multiply total fare by this value (e.g. 1.5x)'),
+                                            
+                                            Forms\Components\TextInput::make('surge_fixed_fee')
+                                                ->label('Surge Fixed Fee (₱)')
+                                                ->numeric()
+                                                ->default(20)
+                                                ->prefix('₱')
+                                                ->helperText('Additional flat fee during surge'),
+                                            
+                                            Forms\Components\TimePicker::make('surge_peak_start')
+                                                ->label('Peak Hours Start')
+                                                ->default('17:00'),
+                                            
+                                            Forms\Components\TimePicker::make('surge_peak_end')
+                                                ->label('Peak Hours End')
+                                                ->default('20:00'),
+                                            
+                                            Forms\Components\CheckboxList::make('surge_factors')
+                                                ->label('Surge Pricing Factors')
+                                                ->options([
+                                                    'weather' => 'Bad Weather (Rain/Storm)',
+                                                    'demand' => 'High Demand (Many Bookings)',
+                                                    'availability' => 'Low Driver Availability',
+                                                    'traffic' => 'Heavy Traffic',
+                                                ])
+                                                ->columns(2)
+                                                ->gridDirection('vertical')
+                                                ->helperText('Select the factors that trigger surge pricing'),
+                                        ])
+                                        ->visible(fn (Forms\Get $get) => $get('enable_surge_pricing'))
+                                        ->columnSpanFull()
+                                        ->columns(2),
                                     ])->columns(2),
                             ]),
                         
@@ -158,9 +218,6 @@ class Settings extends Page
                                             ->default(true),
                                         Forms\Components\Toggle::make('enable_wallet_payment')
                                             ->label('Enable Wallet Payment')
-                                            ->default(true),
-                                        Forms\Components\Toggle::make('enable_online_payment')
-                                            ->label('Enable Online Payment')
                                             ->default(true),
                                     ])->columns(2),
                                 

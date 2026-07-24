@@ -11,7 +11,6 @@ class DriverProfile extends Model
 
     protected $fillable = [
         'user_id',
-        'partner_id',
         'status',
         'commission_rate',
         'rating',
@@ -19,6 +18,11 @@ class DriverProfile extends Model
         'license_number',
         'license_expiry_date',
         'id_document_path',
+        'clearance_document_path',
+        'license_document_path',
+        'biodata_document_path',
+        'motor_registration_path',
+        'motor_or_path',
         'last_latitude',
         'last_longitude',
     ];
@@ -34,11 +38,6 @@ class DriverProfile extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function partner()
-    {
-        return $this->belongsTo(Partner::class);
     }
 
     public function vehicles()

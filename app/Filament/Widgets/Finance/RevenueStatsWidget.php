@@ -49,18 +49,16 @@ class RevenueStatsWidget extends BaseWidget
             ? (($thisMonthRevenue - $lastMonthRevenue) / $lastMonthRevenue) * 100 
             : 0;
         
-        // Average Order Value
-        $avgOrderValue = Order::where('status', 'completed')
-            ->avg('actual_fare') ?? 0;
+        // Total Expenses (Placeholder for now)
+        $totalExpenses = 0;
         
-        // Pending Payments
-        $pendingPayments = Payment::where('status', 'pending')->sum('amount');
+        // Month's Total Transactions
+        $monthTotalTransactions = Payment::whereYear('created_at', now()->year)
+            ->whereMonth('created_at', now()->month)
+            ->count();
         
-        // Failed Payments
-        $failedPayments = Payment::where('status', 'failed')->count();
-        
-        // Total Transactions
-        $totalTransactions = Payment::where('status', 'paid')->count();
+        // Cash on Hand (Sum of all wallet balances)
+        $cashOnHand = \App\Models\Wallet::sum('balance');
         
         return [
             Stat::make('Total Revenue', '₱' . number_format($totalRevenue, 2))
@@ -81,19 +79,19 @@ class RevenueStatsWidget extends BaseWidget
                 ->color('primary')
                 ->chart($this->getTodayHourlyData()),
             
-            Stat::make('Average Order Value', '₱' . number_format($avgOrderValue, 2))
-                ->description('Per completed order')
-                ->descriptionIcon('heroicon-m-calculator')
+            Stat::make('Total Expenses', '₱' . number_format($totalExpenses, 2))
+                ->description('Current expenses')
+                ->descriptionIcon('heroicon-m-banknotes')
+                ->color('danger'),
+            
+            Stat::make('Month’s Total Transactions', number_format($monthTotalTransactions))
+                ->description('Transactions this month')
+                ->descriptionIcon('heroicon-m-credit-card')
                 ->color('info'),
             
-            Stat::make('Pending Payments', '₱' . number_format($pendingPayments, 2))
-                ->description(Payment::where('status', 'pending')->count() . ' transactions')
-                ->descriptionIcon('heroicon-m-clock')
-                ->color('warning'),
-            
-            Stat::make('Total Transactions', number_format($totalTransactions))
-                ->description($failedPayments . ' failed')
-                ->descriptionIcon('heroicon-m-credit-card')
+            Stat::make('Cash on Hand', '₱' . number_format($cashOnHand, 2))
+                ->description('Current business balance')
+                ->descriptionIcon('heroicon-m-wallet')
                 ->color('success'),
         ];
     }

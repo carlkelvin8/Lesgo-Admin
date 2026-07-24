@@ -30,12 +30,6 @@ class ServiceResource extends Resource
                     Forms\Components\TextInput::make('name')
                         ->required()
                         ->maxLength(255),
-                    Forms\Components\Select::make('partner_id')
-                        ->label('Partner')
-                        ->relationship('partner', 'name')
-                        ->searchable()
-                        ->preload()
-                        ->nullable(),
                     Forms\Components\Toggle::make('is_active')
                         ->default(true),
                     Forms\Components\Textarea::make('description')
@@ -59,11 +53,6 @@ class ServiceResource extends Resource
                         ->numeric()
                         ->prefix('PHP/min')
                         ->default(0),
-                    Forms\Components\TextInput::make('minimum_fare')
-                        ->required()
-                        ->numeric()
-                        ->prefix('PHP')
-                        ->default(0),
                 ])->columns(2),
         ]);
     }
@@ -78,14 +67,7 @@ class ServiceResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('partner.name')
-                    ->label('Partner')
-                    ->searchable()
-                    ->toggleable(),
                 Tables\Columns\TextColumn::make('base_fare')
-                    ->money('PHP')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('minimum_fare')
                     ->money('PHP')
                     ->sortable(),
                 Tables\Columns\IconColumn::make('is_active')
@@ -98,8 +80,6 @@ class ServiceResource extends Resource
             ->filters([
                 Tables\Filters\TernaryFilter::make('is_active')
                     ->label('Active'),
-                Tables\Filters\SelectFilter::make('partner')
-                    ->relationship('partner', 'name'),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

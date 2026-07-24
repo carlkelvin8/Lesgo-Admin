@@ -28,7 +28,8 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login(\App\Filament\Pages\Auth\Login::class)
             ->brandName('Lesgo Admin')
-            ->brandLogo(asset('images/logo.svg'))
+            ->brandLogo(fn () => view('filament.components.logo'))
+            ->darkModeBrandLogo(fn () => view('filament.components.logo'))
             ->brandLogoHeight('2.5rem')
             ->colors([
                 'primary' => Color::Sky,

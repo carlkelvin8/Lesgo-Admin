@@ -17,7 +17,7 @@ class VehicleResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with(['driver.user', 'partner']);
+        return parent::getEloquentQuery()->with(['driver.user']);
     }
 
     protected static ?string $navigationIcon = 'heroicon-o-truck';
@@ -36,12 +36,6 @@ class VehicleResource extends Resource
                         ->searchable()
                         ->preload()
                         ->required(),
-                    Forms\Components\Select::make('partner_id')
-                        ->label('Partner')
-                        ->relationship('partner', 'name')
-                        ->searchable()
-                        ->preload()
-                        ->nullable(),
                     Forms\Components\Select::make('type')
                         ->required()
                         ->options([

@@ -30,14 +30,20 @@ class SettingsSeeder extends Seeder
             // Pricing Settings
             ['key' => 'base_fare', 'value' => '50', 'type' => 'integer', 'group' => 'pricing', 'description' => 'Base fare amount'],
             ['key' => 'per_km_rate', 'value' => '10', 'type' => 'integer', 'group' => 'pricing', 'description' => 'Per kilometer rate'],
-            ['key' => 'minimum_fare', 'value' => '100', 'type' => 'integer', 'group' => 'pricing', 'description' => 'Minimum fare amount'],
+            ['key' => 'conv_fee_low', 'value' => '15', 'type' => 'integer', 'group' => 'pricing', 'description' => 'Convenience fee for 1-499 pesos'],
+            ['key' => 'conv_fee_mid', 'value' => '30', 'type' => 'integer', 'group' => 'pricing', 'description' => 'Convenience fee for 500-999 pesos'],
+            ['key' => 'conv_fee_high', 'value' => '45', 'type' => 'integer', 'group' => 'pricing', 'description' => 'Convenience fee for 1000+ pesos'],
             ['key' => 'enable_surge_pricing', 'value' => '0', 'type' => 'boolean', 'group' => 'pricing', 'description' => 'Enable surge pricing'],
+            ['key' => 'surge_multiplier', 'value' => '1.2', 'type' => 'float', 'group' => 'pricing', 'description' => 'Surge multiplier'],
+            ['key' => 'surge_fixed_fee', 'value' => '20', 'type' => 'integer', 'group' => 'pricing', 'description' => 'Surge fixed fee'],
+            ['key' => 'surge_peak_start', 'value' => '17:00', 'type' => 'string', 'group' => 'pricing', 'description' => 'Peak hours start'],
+            ['key' => 'surge_peak_end', 'value' => '20:00', 'type' => 'string', 'group' => 'pricing', 'description' => 'Peak hours end'],
+            ['key' => 'surge_factors', 'value' => '["weather", "demand"]', 'type' => 'array', 'group' => 'pricing', 'description' => 'Surge pricing factors'],
             
             // Payment Settings
             ['key' => 'enable_cash_payment', 'value' => '1', 'type' => 'boolean', 'group' => 'payment', 'description' => 'Enable cash payment'],
             ['key' => 'enable_card_payment', 'value' => '1', 'type' => 'boolean', 'group' => 'payment', 'description' => 'Enable card payment'],
             ['key' => 'enable_wallet_payment', 'value' => '1', 'type' => 'boolean', 'group' => 'payment', 'description' => 'Enable wallet payment'],
-            ['key' => 'enable_online_payment', 'value' => '1', 'type' => 'boolean', 'group' => 'payment', 'description' => 'Enable online payment'],
             ['key' => 'payment_timeout_minutes', 'value' => '15', 'type' => 'integer', 'group' => 'payment', 'description' => 'Payment timeout in minutes'],
             ['key' => 'auto_refund_cancelled_orders', 'value' => '0', 'type' => 'boolean', 'group' => 'payment', 'description' => 'Auto refund cancelled orders'],
             ['key' => 'refund_processing_days', 'value' => '7', 'type' => 'integer', 'group' => 'payment', 'description' => 'Refund processing days'],

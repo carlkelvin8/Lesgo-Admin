@@ -212,7 +212,8 @@ class UserResource extends Resource
                         })
                         ->successNotificationTitle('User unbanned successfully'),
                     Tables\Actions\DeleteAction::make()
-                        ->requiresConfirmation(),
+                        ->requiresConfirmation()
+                        ->successNotificationTitle('User account deleted successfully'),
                 ]),
             ])
             ->bulkActions([
@@ -243,7 +244,8 @@ class UserResource extends Resource
                         ->deselectRecordsAfterCompletion()
                         ->successNotificationTitle('Selected users banned successfully'),
                     Tables\Actions\DeleteBulkAction::make()
-                        ->requiresConfirmation(),
+                        ->requiresConfirmation()
+                        ->successNotificationTitle('Selected user accounts deleted successfully'),
                 ]),
             ])
             ->defaultSort('created_at', 'desc')
