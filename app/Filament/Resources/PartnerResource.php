@@ -240,7 +240,7 @@ class PartnerResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::where('status', 'active')->count();
+        return null;
     }
 }
 

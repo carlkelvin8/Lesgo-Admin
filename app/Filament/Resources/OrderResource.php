@@ -10,7 +10,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Cache;
 
 class OrderResource extends Resource
 {
@@ -262,14 +261,12 @@ class OrderResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return Cache::remember('pending_orders_count', 60, function () {
-            return static::getModel()::where('status', 'pending')->count();
-        });
+        return null;
     }
 
     public static function getNavigationBadgeColor(): ?string
     {
-        return static::getNavigationBadge() > 0 ? 'warning' : 'success';
+        return null;
     }
 }
 

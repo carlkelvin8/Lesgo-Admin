@@ -60,6 +60,6 @@ class SupportTicketResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::where('status', 'open')->count() ?: null;
+        return null;
     }
 }
