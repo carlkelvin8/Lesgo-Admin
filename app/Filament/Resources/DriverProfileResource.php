@@ -145,7 +145,8 @@ class DriverProfileResource extends Resource
                     ->label('Partner')
                     ->searchable()
                     ->toggleable(),
-                Tables\Columns\BadgeColumn::make('status')
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
                     ->colors([
                         'warning' => 'pending',
                         'success' => 'active',
@@ -227,3 +228,4 @@ class DriverProfileResource extends Resource
         ];
     }
 }
+

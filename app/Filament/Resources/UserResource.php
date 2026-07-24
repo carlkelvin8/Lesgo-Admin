@@ -106,7 +106,8 @@ class UserResource extends Resource
                     ->searchable()
                     ->icon('heroicon-o-phone')
                     ->toggleable(),
-                Tables\Columns\BadgeColumn::make('role')
+                Tables\Columns\TextColumn::make('role')
+                    ->badge()
                     ->colors([
                         'danger' => 'admin',
                         'warning' => 'staff',
@@ -275,3 +276,4 @@ class UserResource extends Resource
         return static::getModel()::count();
     }
 }
+

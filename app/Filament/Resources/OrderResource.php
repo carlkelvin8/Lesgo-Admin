@@ -51,6 +51,7 @@ class OrderResource extends Resource
                     Forms\Components\Select::make('driver_id')
                         ->label('Driver')
                         ->relationship('driver', 'id')
+                        ->getOptionLabelFromRecordUsing(fn ($record) => $record->user->name ?? 'Driver #' . $record->id)
                         ->searchable()
                         ->preload()
                         ->nullable(),
@@ -174,7 +175,8 @@ class OrderResource extends Resource
                     ->label('Partner')
                     ->searchable()
                     ->toggleable(),
-                Tables\Columns\BadgeColumn::make('status')
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
                     ->colors([
                         'warning' => 'pending',
                         'info' => 'accepted',
@@ -182,7 +184,8 @@ class OrderResource extends Resource
                         'success' => 'completed',
                         'danger' => 'cancelled',
                     ]),
-                Tables\Columns\BadgeColumn::make('payment_status')
+                Tables\Columns\TextColumn::make('payment_status')
+                    ->badge()
                     ->colors([
                         'warning' => 'pending',
                         'success' => 'paid',
@@ -269,3 +272,4 @@ class OrderResource extends Resource
         return static::getNavigationBadge() > 0 ? 'warning' : 'success';
     }
 }
+

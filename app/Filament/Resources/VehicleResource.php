@@ -32,7 +32,8 @@ class VehicleResource extends Resource
                 ->schema([
                     Forms\Components\Select::make('driver_id')
                         ->label('Driver')
-                        ->relationship('driver.user', 'name')
+                        ->relationship('driver', 'id')
+                        ->getOptionLabelFromRecordUsing(fn ($record) => $record->user->name ?? 'Driver #' . $record->id)
                         ->searchable()
                         ->preload()
                         ->required(),
@@ -95,7 +96,8 @@ class VehicleResource extends Resource
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('year')
                     ->toggleable(),
-                Tables\Columns\BadgeColumn::make('status')
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
                     ->colors([
                         'success' => 'active',
                         'gray' => 'inactive',
@@ -152,3 +154,4 @@ class VehicleResource extends Resource
         ];
     }
 }
+

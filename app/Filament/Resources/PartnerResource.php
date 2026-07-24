@@ -160,7 +160,8 @@ class PartnerResource extends Resource
                 Tables\Columns\TextColumn::make('business_type')
                     ->searchable()
                     ->toggleable(),
-                Tables\Columns\BadgeColumn::make('status')
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
                     ->colors([
                         'warning' => 'pending',
                         'success' => 'active',
@@ -242,3 +243,4 @@ class PartnerResource extends Resource
         return static::getModel()::where('status', 'active')->count();
     }
 }
+
