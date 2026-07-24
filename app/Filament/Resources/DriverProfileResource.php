@@ -97,38 +97,30 @@ class DriverProfileResource extends Resource
                 ])->columns(2),
 
             Forms\Components\Section::make('Driver Requirements')
-                ->description('Upload JPG, PDF, or PNG files for driver registration')
+                ->description('Documents submitted by the rider for verification')
                 ->schema([
-                    Forms\Components\FileUpload::make('id_document_path')
-                        ->label('Valid ID')
-                        ->directory('driver-requirements')
-                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
-                        ->maxSize(5120),
-                    Forms\Components\FileUpload::make('clearance_document_path')
-                        ->label('Barangay / Police / NBI Clearance')
-                        ->directory('driver-requirements')
-                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
-                        ->maxSize(5120),
-                    Forms\Components\FileUpload::make('license_document_path')
-                        ->label("Driver's License")
-                        ->directory('driver-requirements')
-                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
-                        ->maxSize(5120),
-                    Forms\Components\FileUpload::make('biodata_document_path')
-                        ->label('Biodata/Resume')
-                        ->directory('driver-requirements')
-                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
-                        ->maxSize(5120),
-                    Forms\Components\FileUpload::make('motor_registration_path')
-                        ->label('Motor Registration')
-                        ->directory('driver-requirements')
-                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
-                        ->maxSize(5120),
-                    Forms\Components\FileUpload::make('motor_or_path')
-                        ->label('Motor OR (Official Receipt)')
-                        ->directory('driver-requirements')
-                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
-                        ->maxSize(5120),
+                    Forms\Components\ViewField::make('documents_display')
+                        ->label('')
+                        ->view('filament.components.driver-documents')
+                        ->columnSpanFull(),
+                    Forms\Components\TextInput::make('id_document_path')
+                        ->label('Valid ID Path')
+                        ->disabled(),
+                    Forms\Components\TextInput::make('clearance_document_path')
+                        ->label('Clearance Path')
+                        ->disabled(),
+                    Forms\Components\TextInput::make('license_document_path')
+                        ->label("License Path")
+                        ->disabled(),
+                    Forms\Components\TextInput::make('biodata_document_path')
+                        ->label('Biodata Path')
+                        ->disabled(),
+                    Forms\Components\TextInput::make('motor_registration_path')
+                        ->label('Motor Registration Path')
+                        ->disabled(),
+                    Forms\Components\TextInput::make('motor_or_path')
+                        ->label('Motor OR Path')
+                        ->disabled(),
                 ])->columns(2),
         ]);
     }
