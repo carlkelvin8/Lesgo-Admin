@@ -61,7 +61,7 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 // Widgets are auto-discovered
             ])
-            ->databaseNotifications()
+            ->databaseNotifications(false)
             ->databaseNotificationsPolling('30s')
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->spa()
