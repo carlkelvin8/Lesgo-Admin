@@ -31,6 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogo(fn () => view('filament.components.logo'))
             ->darkModeBrandLogo(fn () => view('filament.components.logo'))
             ->brandLogoHeight('2.5rem')
+            ->darkMode(true)
             ->colors([
                 'primary' => Color::Sky,
                 'danger' => Color::Red,
