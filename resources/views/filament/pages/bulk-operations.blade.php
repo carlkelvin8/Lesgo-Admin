@@ -1,4 +1,4 @@
-<x-filament-panels::page>
+﻿<x-filament-panels::page>
     <style>
         .bulk-operations-header {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
@@ -46,7 +46,7 @@
     </style>
     
     <div class="bulk-operations-header">
-        <h2>⚡ Bulk Operations</h2>
+        <h2> Bulk Operations</h2>
         <p>Perform actions on multiple items at once to save time</p>
     </div>
     
@@ -63,3 +63,5 @@
         </div>
     </form>
 </x-filament-panels::page>
+
+

@@ -1,4 +1,4 @@
-<x-filament-panels::page>
+﻿<x-filament-panels::page>
     <style>
         .reports-header {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
@@ -94,7 +94,7 @@
     </style>
     
     <div class="reports-header">
-        <h2>📊 Reports & Analytics</h2>
+        <h2> Reports & Analytics</h2>
         <p>Comprehensive business insights and performance metrics</p>
     </div>
     
@@ -104,7 +104,7 @@
     
     <div class="reports-grid">
         <div class="report-card">
-            <h3>📦 Orders Overview</h3>
+            <h3> Orders Overview</h3>
             <div class="report-stat">
                 <span class="report-stat-label">Total Orders</span>
                 <span class="report-stat-value">{{ number_format($data['orders']['total']) }}</span>
@@ -124,7 +124,7 @@
         </div>
         
         <div class="report-card">
-            <h3>💰 Revenue Overview</h3>
+            <h3> Revenue Overview</h3>
             <div class="report-stat">
                 <span class="report-stat-label">Total Revenue</span>
                 <span class="report-stat-value">₱{{ number_format($data['revenue']['total'], 2) }}</span>
@@ -144,7 +144,7 @@
         </div>
         
         <div class="report-card">
-            <h3>👥 Users Overview</h3>
+            <h3> Users Overview</h3>
             <div class="report-stat">
                 <span class="report-stat-label">Total Users</span>
                 <span class="report-stat-value">{{ number_format($data['users']['total']) }}</span>
@@ -160,7 +160,7 @@
         </div>
         
         <div class="report-card">
-            <h3>🚗 Drivers Overview</h3>
+            <h3> Drivers Overview</h3>
             <div class="report-stat">
                 <span class="report-stat-label">Total Drivers</span>
                 <span class="report-stat-value">{{ number_format($data['drivers']['total']) }}</span>
@@ -176,3 +176,5 @@
         </div>
     </div>
 </x-filament-panels::page>
+
+

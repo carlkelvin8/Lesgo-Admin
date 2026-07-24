@@ -1,4 +1,4 @@
-<x-filament-panels::page>
+﻿<x-filament-panels::page>
     <style>
         .notification-header {
             background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
@@ -86,7 +86,7 @@
     </style>
     
     <div class="notification-header">
-        <h2>🔔 Notification Center</h2>
+        <h2> Notification Center</h2>
         <p>Send notifications to users via multiple channels</p>
     </div>
     
@@ -119,3 +119,5 @@
         </div>
     </form>
 </x-filament-panels::page>
+
+

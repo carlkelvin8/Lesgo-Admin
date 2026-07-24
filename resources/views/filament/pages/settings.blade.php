@@ -1,4 +1,4 @@
-<x-filament-panels::page>
+﻿<x-filament-panels::page>
     <style>
         /* Settings Page Styles */
         .settings-header {
@@ -215,7 +215,7 @@
     <div class="settings-header">
         <div class="flex items-center justify-between">
             <div>
-                <h2><span class="settings-icon">⚙️</span> Application Settings</h2>
+                <h2>Application Settings</h2>
                 <p>Configure your application preferences and system settings</p>
             </div>
             <div class="text-right last-updated">
@@ -240,3 +240,5 @@
         </div>
     </form>
 </x-filament-panels::page>
+
+

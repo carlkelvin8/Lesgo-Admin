@@ -36,7 +36,7 @@ class StatsOverview extends BaseWidget
                 ->descriptionIcon('heroicon-m-clock')
                 ->color('warning'),
 
-            Stat::make("Today's Revenue", '₱' . number_format(Payment::where('status', 'paid')->whereDate('created_at', today())->sum('amount'), 2))
+            Stat::make("Today's Revenue", 'PHP ' . number_format(Payment::where('status', 'paid')->whereDate('created_at', today())->sum('amount'), 2))
                 ->description('Earnings today')
                 ->descriptionIcon('heroicon-m-banknotes')
                 ->color('success'),

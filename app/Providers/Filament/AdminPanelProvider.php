@@ -69,12 +69,12 @@ class AdminPanelProvider extends PanelProvider
                 'panels::auth.login.form.before',
                 fn (): string => '
                 <div class="flex flex-col items-center mb-6">
-                    <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-purple-600 to-violet-500 shadow-lg shadow-purple-500/30">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-tr from-purple-600 to-violet-500 shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                         </svg>
                     </div>
-                    <h1 class="text-2xl font-black tracking-tight text-gray-900 dark:text-white">
+                    <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                         Lesgo <span class="text-purple-600">Admin</span>
                     </h1>
                     <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Courier Service</p>
@@ -86,7 +86,7 @@ class AdminPanelProvider extends PanelProvider
                 fn (): string => '
                 <div class="mt-6 text-center">
                     <p class="text-xs text-gray-400 dark:text-gray-500">
-                        &copy; ' . date('Y') . ' Lesgo Logistics &bull; All rights reserved
+                        &copy; ' . date('Y') . ' Lesgo Logistics. All rights reserved.
                     </p>
                 </div>
                 '
