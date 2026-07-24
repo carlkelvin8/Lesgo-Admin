@@ -30,12 +30,31 @@ class ServiceResource extends Resource
                     Forms\Components\TextInput::make('name')
                         ->required()
                         ->maxLength(255),
+                    Forms\Components\Select::make('category')
+                        ->options([
+                            'delivery' => 'Delivery',
+                            'errand' => 'Errand',
+                            'food' => 'Food Delivery',
+                            'transport' => 'Transport',
+                            'courier' => 'Courier',
+                        ])
+                        ->nullable(),
+                    Forms\Components\Select::make('partner_id')
+                        ->label('Partner')
+                        ->relationship('partner', 'name')
+                        ->searchable()
+                        ->preload()
+                        ->nullable(),
                     Forms\Components\Toggle::make('is_active')
                         ->default(true),
+                    Forms\Components\TextInput::make('sort_order')
+                        ->numeric()
+                        ->default(0),
                     Forms\Components\Textarea::make('description')
                         ->columnSpanFull()
                         ->nullable(),
                 ])->columns(2),
+
             Forms\Components\Section::make('Pricing')
                 ->schema([
                     Forms\Components\TextInput::make('base_fare')
@@ -53,6 +72,24 @@ class ServiceResource extends Resource
                         ->numeric()
                         ->prefix('PHP/min')
                         ->default(0),
+                    Forms\Components\TextInput::make('minimum_fare')
+                        ->numeric()
+                        ->prefix('PHP')
+                        ->default(0),
+                ])->columns(2),
+
+            Forms\Components\Section::make('Display')
+                ->schema([
+                    Forms\Components\TextInput::make('icon_url')
+                        ->label('Icon URL')
+                        ->url()
+                        ->maxLength(500),
+                    Forms\Components\TextInput::make('image_url')
+                        ->label('Image URL')
+                        ->url()
+                        ->maxLength(500),
+                    Forms\Components\TagsInput::make('features')
+                        ->nullable(),
                 ])->columns(2),
         ]);
     }
@@ -67,11 +104,21 @@ class ServiceResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('category')
+                    ->searchable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('base_fare')
                     ->money('PHP')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('minimum_fare')
+                    ->money('PHP')
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
+                Tables\Columns\TextColumn::make('sort_order')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -80,6 +127,14 @@ class ServiceResource extends Resource
             ->filters([
                 Tables\Filters\TernaryFilter::make('is_active')
                     ->label('Active'),
+                Tables\Filters\SelectFilter::make('category')
+                    ->options([
+                        'delivery' => 'Delivery',
+                        'errand' => 'Errand',
+                        'food' => 'Food Delivery',
+                        'transport' => 'Transport',
+                        'courier' => 'Courier',
+                    ]),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -91,7 +146,7 @@ class ServiceResource extends Resource
                     Tables\Actions\DeleteBulkAction::make()->requiresConfirmation(),
                 ]),
             ])
-            ->defaultSort('created_at', 'desc');
+            ->defaultSort('sort_order', 'asc');
     }
 
     public static function getRelations(): array

@@ -15,18 +15,15 @@ use Illuminate\Support\Facades\Cache;
 class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
-    
+
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with(['customer', 'service', 'partner']);
+        return parent::getEloquentQuery()->with(['customer', 'service', 'partner', 'driver']);
     }
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
     protected static ?string $navigationGroup = 'Operations';
     protected static ?int $navigationSort = 1;
-    protected static ?string $navigationLabel = 'Orders';
-    protected static ?string $pluralModelLabel = 'Orders';
-    protected static ?string $modelLabel = 'Order';
 
     public static function form(Form $form): Form
     {
@@ -51,27 +48,34 @@ class OrderResource extends Resource
                         ->searchable()
                         ->preload()
                         ->nullable(),
+                    Forms\Components\Select::make('driver_id')
+                        ->label('Driver')
+                        ->relationship('driver', 'id')
+                        ->searchable()
+                        ->preload()
+                        ->nullable(),
                     Forms\Components\Select::make('status')
                         ->required()
                         ->options([
                             'pending' => 'Pending',
                             'accepted' => 'Accepted',
+                            'driver_arrived' => 'Driver Arrived',
+                            'in_progress' => 'In Progress',
                             'picked_up' => 'Picked Up',
                             'completed' => 'Completed',
                             'cancelled' => 'Cancelled',
                         ])
                         ->default('pending'),
                     Forms\Components\Select::make('payment_method')
-                        ->required()
                         ->options([
                             'cash' => 'Cash',
                             'gcash' => 'GCash',
                             'maya' => 'Maya',
                             'card' => 'Card',
+                            'wallet' => 'Wallet',
                         ])
                         ->default('cash'),
                     Forms\Components\Select::make('payment_status')
-                        ->required()
                         ->options([
                             'pending' => 'Pending',
                             'paid' => 'Paid',
@@ -80,45 +84,74 @@ class OrderResource extends Resource
                         ])
                         ->default('pending'),
                 ])->columns(2),
-            Forms\Components\Section::make('Fare Details')
+
+            Forms\Components\Section::make('Fare & Financials')
                 ->schema([
                     Forms\Components\TextInput::make('estimated_fare')
                         ->numeric()
-                        ->prefix('PHP')
-                        ->nullable(),
+                        ->prefix('PHP'),
                     Forms\Components\TextInput::make('actual_fare')
                         ->numeric()
+                        ->prefix('PHP'),
+                    Forms\Components\TextInput::make('partner_share')
+                        ->numeric()
+                        ->prefix('PHP'),
+                    Forms\Components\TextInput::make('driver_share')
+                        ->numeric()
+                        ->prefix('PHP'),
+                    Forms\Components\TextInput::make('platform_fee')
+                        ->numeric()
+                        ->prefix('PHP'),
+                    Forms\Components\TextInput::make('platform_share')
+                        ->numeric()
+                        ->prefix('PHP'),
+                    Forms\Components\TextInput::make('voucher_code')
+                        ->maxLength(50)
+                        ->nullable(),
+                    Forms\Components\TextInput::make('voucher_discount')
+                        ->numeric()
                         ->prefix('PHP')
                         ->nullable(),
+                ])->columns(2),
+
+            Forms\Components\Section::make('Distance & Timing')
+                ->schema([
                     Forms\Components\TextInput::make('estimated_distance_m')
                         ->label('Estimated Distance (m)')
-                        ->numeric()
-                        ->nullable(),
+                        ->numeric(),
                     Forms\Components\TextInput::make('actual_distance_m')
                         ->label('Actual Distance (m)')
-                        ->numeric()
-                        ->nullable(),
-                ])->columns(2),
-            Forms\Components\Section::make('Schedule')
-                ->schema([
-                    Forms\Components\DateTimePicker::make('scheduled_at')
-                        ->nullable(),
+                        ->numeric(),
+                    Forms\Components\DateTimePicker::make('scheduled_at'),
+                    Forms\Components\DateTimePicker::make('scheduled_delivery_time'),
+                    Forms\Components\DateTimePicker::make('accepted_at'),
+                    Forms\Components\DateTimePicker::make('driver_arrived_at'),
+                    Forms\Components\DateTimePicker::make('picked_up_at'),
+                    Forms\Components\DateTimePicker::make('completed_at'),
+                    Forms\Components\DateTimePicker::make('cancelled_at'),
                     Forms\Components\Textarea::make('cancel_reason')
                         ->nullable()
                         ->columnSpanFull(),
                 ])->columns(2),
+
             Forms\Components\Section::make('Delivery Evidence')
                 ->schema([
                     Forms\Components\FileUpload::make('pickup_picture')
                         ->label('Pick-up Picture')
                         ->image()
-                        ->directory('order-evidence')
-                        ->visibility('public'),
+                        ->directory('order-evidence'),
                     Forms\Components\FileUpload::make('dropoff_picture')
                         ->label('Drop-off Picture')
                         ->image()
-                        ->directory('order-evidence')
-                        ->visibility('public'),
+                        ->directory('order-evidence'),
+                    Forms\Components\FileUpload::make('proof_pickup_image')
+                        ->label('Proof of Pickup')
+                        ->image()
+                        ->directory('order-evidence'),
+                    Forms\Components\FileUpload::make('proof_delivery_image')
+                        ->label('Proof of Delivery')
+                        ->image()
+                        ->directory('order-evidence'),
                 ])->columns(2),
         ]);
     }
@@ -145,7 +178,7 @@ class OrderResource extends Resource
                     ->colors([
                         'warning' => 'pending',
                         'info' => 'accepted',
-                        'primary' => 'picked_up',
+                        'primary' => fn ($state) => in_array($state, ['picked_up', 'driver_arrived', 'in_progress']),
                         'success' => 'completed',
                         'danger' => 'cancelled',
                     ]),
@@ -160,6 +193,8 @@ class OrderResource extends Resource
                     ->label('Fare')
                     ->money('PHP')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('payment_method')
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -170,6 +205,8 @@ class OrderResource extends Resource
                     ->options([
                         'pending' => 'Pending',
                         'accepted' => 'Accepted',
+                        'driver_arrived' => 'Driver Arrived',
+                        'in_progress' => 'In Progress',
                         'picked_up' => 'Picked Up',
                         'completed' => 'Completed',
                         'cancelled' => 'Cancelled',
@@ -187,18 +224,17 @@ class OrderResource extends Resource
                         'gcash' => 'GCash',
                         'maya' => 'Maya',
                         'card' => 'Card',
+                        'wallet' => 'Wallet',
                     ]),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
-                    ->requiresConfirmation(),
+                Tables\Actions\DeleteAction::make()->requiresConfirmation(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
-                        ->requiresConfirmation(),
+                    Tables\Actions\DeleteBulkAction::make()->requiresConfirmation(),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');

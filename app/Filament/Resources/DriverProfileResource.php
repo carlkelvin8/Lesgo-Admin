@@ -17,7 +17,7 @@ class DriverProfileResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with(['user']);
+        return parent::getEloquentQuery()->with(['user', 'partner']);
     }
 
     protected static ?string $navigationIcon = 'heroicon-o-truck';
@@ -36,6 +36,12 @@ class DriverProfileResource extends Resource
                         ->searchable()
                         ->preload()
                         ->required(),
+                    Forms\Components\Select::make('partner_id')
+                        ->label('Partner')
+                        ->relationship('partner', 'name')
+                        ->searchable()
+                        ->preload()
+                        ->nullable(),
                     Forms\Components\Select::make('status')
                         ->required()
                         ->options([
@@ -45,14 +51,20 @@ class DriverProfileResource extends Resource
                             'suspended' => 'Suspended',
                         ])
                         ->default('pending'),
+                    Forms\Components\Select::make('package_tier')
+                        ->options([
+                            'basic' => 'Basic',
+                            'standard' => 'Standard',
+                            'premium' => 'Premium',
+                        ])
+                        ->nullable(),
                     Forms\Components\TextInput::make('commission_rate')
                         ->label('Commission Rate (%)')
                         ->numeric()
                         ->minValue(0)
                         ->maxValue(100)
                         ->default(0)
-                        ->suffix('%')
-                        ->helperText('The percentage of commission this rider gets per transaction.'),
+                        ->suffix('%'),
                     Forms\Components\TextInput::make('rating')
                         ->numeric()
                         ->minValue(0)
@@ -61,45 +73,62 @@ class DriverProfileResource extends Resource
                     Forms\Components\TextInput::make('total_trips')
                         ->numeric()
                         ->default(0),
+                ])->columns(2),
+
+            Forms\Components\Section::make('License & Vehicle')
+                ->schema([
                     Forms\Components\TextInput::make('license_number')
                         ->maxLength(100)
                         ->nullable(),
                     Forms\Components\DatePicker::make('license_expiry_date')
                         ->nullable(),
+                    Forms\Components\Select::make('vehicle_type')
+                        ->options([
+                            'motorcycle' => 'Motorcycle',
+                            'car' => 'Car',
+                            'van' => 'Van',
+                            'truck' => 'Truck',
+                            'bicycle' => 'Bicycle',
+                        ])
+                        ->nullable(),
+                    Forms\Components\TextInput::make('plate_number')
+                        ->maxLength(20)
+                        ->nullable(),
                 ])->columns(2),
+
             Forms\Components\Section::make('Driver Requirements')
                 ->description('Upload JPG, PDF, or PNG files for driver registration')
                 ->schema([
+                    Forms\Components\FileUpload::make('id_document_path')
+                        ->label('Valid ID')
+                        ->directory('driver-requirements')
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
+                        ->maxSize(5120),
                     Forms\Components\FileUpload::make('clearance_document_path')
                         ->label('Barangay / Police / NBI Clearance')
                         ->directory('driver-requirements')
                         ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
-                        ->maxSize(5120)
-                        ->required(),
+                        ->maxSize(5120),
                     Forms\Components\FileUpload::make('license_document_path')
-                        ->label('Updated Driver\'s License')
+                        ->label("Driver's License")
                         ->directory('driver-requirements')
                         ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
-                        ->maxSize(5120)
-                        ->required(),
+                        ->maxSize(5120),
                     Forms\Components\FileUpload::make('biodata_document_path')
-                        ->label('Updated Biodata/Resume')
+                        ->label('Biodata/Resume')
                         ->directory('driver-requirements')
                         ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
-                        ->maxSize(5120)
-                        ->required(),
+                        ->maxSize(5120),
                     Forms\Components\FileUpload::make('motor_registration_path')
                         ->label('Motor Registration')
                         ->directory('driver-requirements')
                         ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
-                        ->maxSize(5120)
-                        ->required(),
+                        ->maxSize(5120),
                     Forms\Components\FileUpload::make('motor_or_path')
-                        ->label('Motor Updated Official Receipt (OR)')
+                        ->label('Motor OR (Official Receipt)')
                         ->directory('driver-requirements')
                         ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
-                        ->maxSize(5120)
-                        ->required(),
+                        ->maxSize(5120),
                 ])->columns(2),
         ]);
     }
@@ -112,6 +141,10 @@ class DriverProfileResource extends Resource
                     ->label('Driver Name')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('partner.name')
+                    ->label('Partner')
+                    ->searchable()
+                    ->toggleable(),
                 Tables\Columns\BadgeColumn::make('status')
                     ->colors([
                         'warning' => 'pending',
@@ -119,6 +152,10 @@ class DriverProfileResource extends Resource
                         'gray' => 'inactive',
                         'danger' => 'suspended',
                     ]),
+                Tables\Columns\TextColumn::make('vehicle_type')
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('plate_number')
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('commission_rate')
                     ->label('Commission')
                     ->suffix('%')
@@ -129,10 +166,8 @@ class DriverProfileResource extends Resource
                 Tables\Columns\TextColumn::make('total_trips')
                     ->label('Trips')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('license_number')
-                    ->toggleable(),
-                Tables\Columns\TextColumn::make('license_expiry_date')
-                    ->date()
+                Tables\Columns\TextColumn::make('package_tier')
+                    ->label('Tier')
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -147,19 +182,29 @@ class DriverProfileResource extends Resource
                         'inactive' => 'Inactive',
                         'suspended' => 'Suspended',
                     ]),
+                Tables\Filters\SelectFilter::make('vehicle_type')
+                    ->options([
+                        'motorcycle' => 'Motorcycle',
+                        'car' => 'Car',
+                        'van' => 'Van',
+                        'truck' => 'Truck',
+                        'bicycle' => 'Bicycle',
+                    ]),
+                Tables\Filters\SelectFilter::make('package_tier')
+                    ->options([
+                        'basic' => 'Basic',
+                        'standard' => 'Standard',
+                        'premium' => 'Premium',
+                    ]),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
-                    ->requiresConfirmation()
-                    ->successNotificationTitle('Driver profile deleted successfully'),
+                Tables\Actions\DeleteAction::make()->requiresConfirmation(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
-                        ->requiresConfirmation()
-                        ->successNotificationTitle('Selected driver profiles deleted successfully'),
+                    Tables\Actions\DeleteBulkAction::make()->requiresConfirmation(),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');

@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PartnerResource\Pages;
 use App\Models\Partner;
-use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -48,8 +47,18 @@ class PartnerResource extends Resource
                             'delivery' => 'Delivery',
                             'transport' => 'Transport',
                             'courier' => 'Courier',
+                            'food' => 'Food & Restaurant',
                             'other' => 'Other',
                         ]),
+                    Forms\Components\Select::make('category')
+                        ->options([
+                            'food' => 'Food & Beverage',
+                            'grocery' => 'Grocery',
+                            'logistics' => 'Logistics',
+                            'delivery' => 'Delivery',
+                            'services' => 'Services',
+                        ])
+                        ->nullable(),
                     Forms\Components\TextInput::make('tax_id')
                         ->label('Tax ID')
                         ->maxLength(100),
@@ -62,14 +71,28 @@ class PartnerResource extends Resource
                             'rejected' => 'Rejected',
                         ])
                         ->default('pending'),
+                    Forms\Components\Textarea::make('description')
+                        ->maxLength(1000)
+                        ->columnSpanFull(),
                 ])->columns(2),
-            Forms\Components\Section::make('Contact Information')
+
+            Forms\Components\Section::make('Branding')
                 ->schema([
-                    Forms\Components\Textarea::make('store_address')
-                        ->label('Store Address')
-                        ->maxLength(500)
-                        ->rows(3)
-                        ->placeholder('Enter complete store address'),
+                    Forms\Components\TextInput::make('logo_url')
+                        ->label('Logo URL')
+                        ->url()
+                        ->maxLength(500),
+                    Forms\Components\TextInput::make('cover_image_url')
+                        ->label('Cover Image URL')
+                        ->url()
+                        ->maxLength(500),
+                ])->columns(2),
+
+            Forms\Components\Section::make('Contact & Owner')
+                ->schema([
+                    Forms\Components\TextInput::make('support_email')
+                        ->email()
+                        ->maxLength(255),
                     Forms\Components\TextInput::make('support_phone')
                         ->tel()
                         ->maxLength(100),
@@ -78,6 +101,47 @@ class PartnerResource extends Resource
                         ->relationship('user', 'name')
                         ->searchable()
                         ->preload()
+                        ->nullable(),
+                ])->columns(2),
+
+            Forms\Components\Section::make('Delivery & Operations')
+                ->schema([
+                    Forms\Components\TextInput::make('delivery_fee')
+                        ->numeric()
+                        ->prefix('PHP')
+                        ->default(0),
+                    Forms\Components\TextInput::make('min_order_amount')
+                        ->numeric()
+                        ->prefix('PHP')
+                        ->default(0),
+                    Forms\Components\TextInput::make('estimated_delivery_minutes')
+                        ->numeric()
+                        ->suffix('mins')
+                        ->default(30),
+                    Forms\Components\TextInput::make('rating')
+                        ->numeric()
+                        ->minValue(0)
+                        ->maxValue(5)
+                        ->default(0),
+                    Forms\Components\TextInput::make('total_reviews')
+                        ->numeric()
+                        ->default(0),
+                    Forms\Components\Toggle::make('is_open')
+                        ->label('Currently Open')
+                        ->default(true),
+                    Forms\Components\Toggle::make('is_featured')
+                        ->label('Featured Partner')
+                        ->default(false),
+                    Forms\Components\Toggle::make('accepts_online_payment')
+                        ->default(true),
+                ])->columns(2),
+
+            Forms\Components\Section::make('Tags & Cuisine')
+                ->schema([
+                    Forms\Components\TagsInput::make('tags')
+                        ->nullable(),
+                    Forms\Components\TagsInput::make('cuisine_types')
+                        ->label('Cuisine Types')
                         ->nullable(),
                 ])->columns(2),
         ]);
@@ -90,14 +154,11 @@ class PartnerResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('business_type')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('store_address')
-                    ->label('Store Address')
+                Tables\Columns\TextColumn::make('category')
                     ->searchable()
-                    ->limit(50)
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('support_phone')
+                Tables\Columns\TextColumn::make('business_type')
+                    ->searchable()
                     ->toggleable(),
                 Tables\Columns\BadgeColumn::make('status')
                     ->colors([
@@ -106,6 +167,18 @@ class PartnerResource extends Resource
                         'danger' => 'suspended',
                         'gray' => 'rejected',
                     ]),
+                Tables\Columns\TextColumn::make('rating')
+                    ->sortable(),
+                Tables\Columns\IconColumn::make('is_open')
+                    ->boolean()
+                    ->label('Open'),
+                Tables\Columns\IconColumn::make('is_featured')
+                    ->boolean()
+                    ->label('Featured')
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('delivery_fee')
+                    ->money('PHP')
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -119,26 +192,27 @@ class PartnerResource extends Resource
                         'suspended' => 'Suspended',
                         'rejected' => 'Rejected',
                     ]),
-                Tables\Filters\SelectFilter::make('business_type')
+                Tables\Filters\SelectFilter::make('category')
                     ->options([
+                        'food' => 'Food & Beverage',
+                        'grocery' => 'Grocery',
                         'logistics' => 'Logistics',
                         'delivery' => 'Delivery',
-                        'transport' => 'Transport',
-                        'courier' => 'Courier',
+                        'services' => 'Services',
                     ]),
+                Tables\Filters\TernaryFilter::make('is_open')
+                    ->label('Open Status'),
+                Tables\Filters\TernaryFilter::make('is_featured')
+                    ->label('Featured'),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
-                    ->requiresConfirmation()
-                    ->successNotificationTitle('Partner deleted successfully'),
+                Tables\Actions\DeleteAction::make()->requiresConfirmation(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
-                        ->requiresConfirmation()
-                        ->successNotificationTitle('Selected partners deleted successfully'),
+                    Tables\Actions\DeleteBulkAction::make()->requiresConfirmation(),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');
