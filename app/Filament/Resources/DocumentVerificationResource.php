@@ -23,12 +23,7 @@ class DocumentVerificationResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with(['user'])->whereNotNull('id_document_path')
-            ->orWhereNotNull('clearance_document_path')
-            ->orWhereNotNull('license_document_path')
-            ->orWhereNotNull('biodata_document_path')
-            ->orWhereNotNull('motor_registration_path')
-            ->orWhereNotNull('motor_or_path');
+        return parent::getEloquentQuery()->with(['user']);
     }
 
     public static function form(Form $form): Form
