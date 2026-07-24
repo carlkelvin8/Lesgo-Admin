@@ -64,7 +64,6 @@ class AdminPanelProvider extends PanelProvider
             ->databaseNotifications(false)
             ->databaseNotificationsPolling('30s')
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
-            ->spa()
             ->renderHook(
                 'panels::auth.login.form.before',
                 fn (): string => '
