@@ -33,9 +33,9 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogoHeight('2.5rem')
             ->darkMode(true)
             ->colors([
-                'primary' => Color::Sky,
+                'primary' => Color::Purple,
                 'danger' => Color::Red,
-                'gray' => Color::Zinc,
+                'gray' => Color::Slate,
                 'info' => Color::Blue,
                 'success' => Color::Green,
                 'warning' => Color::Amber,
@@ -69,15 +69,15 @@ class AdminPanelProvider extends PanelProvider
                 'panels::auth.login.form.before',
                 fn (): string => '
                 <div class="flex flex-col items-center mb-6">
-                    <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-500 shadow-lg shadow-sky-500/30">
+                    <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-purple-600 to-violet-500 shadow-lg shadow-purple-500/30">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                     </div>
                     <h1 class="text-2xl font-black tracking-tight text-gray-900 dark:text-white">
-                        Lesgo <span class="text-sky-500">Admin</span>
+                        Lesgo <span class="text-purple-600">Admin</span>
                     </h1>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Premium Logistics Suite</p>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Courier Service</p>
                 </div>
                 '
             )
