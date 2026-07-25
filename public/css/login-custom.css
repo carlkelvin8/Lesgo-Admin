@@ -1,0 +1,52 @@
+/* Split Login Layout */
+.fi-simple-layout {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    min-height: 100vh !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    position: relative !important;
+}
+
+@media (min-width: 768px) {
+    .fi-simple-layout {
+        grid-template-columns: 400px 1fr !important;
+    }
+    .fi-simple-layout::before {
+        content: "Lesgo\ACourier Service\A\AFast & reliable delivery trusted by thousands of merchants and riders across the Philippines.";
+        white-space: pre-wrap;
+        display: flex !important;
+        align-items: flex-end !important;
+        padding: 3rem !important;
+        color: rgba(255, 255, 255, 0.9) !important;
+        font-size: 1.5rem !important;
+        font-weight: 700 !important;
+        line-height: 1.4 !important;
+        background: linear-gradient(160deg, #5b21b6 0%, #7c3aed 50%, #6d28d9 100%) !important;
+    }
+}
+
+.fi-simple-layout > div {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 2rem !important;
+}
+
+.fi-simple-main-ctn {
+    max-width: 380px !important;
+    width: 100% !important;
+}
+
+/* Hide default logo on login */
+.fi-simple-layout .fi-logo {
+    display: none !important;
+}
+
+.dark .fi-simple-layout {
+    background: #0f172a !important;
+}
+
+.dark .fi-simple-layout::before {
+    background: linear-gradient(160deg, #1e1b4b 0%, #312e81 50%, #3730a3 100%) !important;
+}
