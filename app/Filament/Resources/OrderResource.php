@@ -264,6 +264,15 @@ class OrderResource extends Resource
         ];
     }
 
+    public static function getWidgets(): array
+    {
+        return [
+            OrderResource\Widgets\OrderStatsWidget::class,
+            OrderResource\Widgets\DailyOrdersChart::class,
+            OrderResource\Widgets\OrderStatusChart::class,
+        ];
+    }
+
     public static function getNavigationBadge(): ?string
     {
         return null;

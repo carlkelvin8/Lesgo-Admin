@@ -15,23 +15,23 @@ class ListOrders extends ListRecords
         return [Actions\CreateAction::make()];
     }
 
-    protected function getTableRecordsPerPageSelectOptions(): array
+    protected function getHeaderWidgets(): array
     {
-        return [10, 25, 50, 100];
+        return [
+            OrderResource\Widgets\OrderStatsWidget::class,
+        ];
     }
 
-    protected function getTableFiltersLayout(): ?string
+    protected function getFooterWidgets(): array
     {
-        return \Filament\Tables\Enums\FiltersLayout::AboveContent;
+        return [
+            OrderResource\Widgets\DailyOrdersChart::class,
+            OrderResource\Widgets\OrderStatusChart::class,
+        ];
     }
 
-    protected function getTableDeferredLoading(): bool
+    public function getFooterWidgetsColumns(): int | array
     {
-        return true;
-    }
-
-    protected function getGlobalSearchDebounce(): string
-    {
-        return '500ms';
+        return 2;
     }
 }
