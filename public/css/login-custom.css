@@ -1,61 +1,28 @@
-/* Split Login Layout */
-@media (min-width: 768px) {
-    .fi-simple-layout {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr !important;
-        min-height: 100vh !important;
-        padding: 0 !important;
-        background: #ffffff !important;
-        position: relative !important;
-    }
-
-    .fi-simple-layout::before {
-        content: "";
-        display: block !important;
-        background: linear-gradient(160deg, #5b21b6 0%, #7c3aed 50%, #6d28d9 100%) !important;
-    }
-
-    .fi-simple-layout::after {
-        content: "Lesgo\ACourier Service\A\AFast & reliable delivery platform trusted by thousands of merchants and riders across the Philippines.\A\AManage your fleet, track orders, and grow your business.";
-        white-space: pre-wrap !important;
-        position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 50% !important;
-        height: 100% !important;
-        display: flex !important;
-        align-items: center !important;
-        padding: 4rem !important;
-        color: rgba(255, 255, 255, 0.95) !important;
-        font-size: 1.8rem !important;
-        font-weight: 700 !important;
-        line-height: 1.4 !important;
-        pointer-events: none !important;
-    }
-
-    .fi-simple-layout > div {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        padding: 3rem !important;
-    }
-
-    .fi-simple-main-ctn {
-        max-width: 380px !important;
-        width: 100% !important;
-    }
+/* Clean Login Page */
+.fi-simple-layout {
+    background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 40%, #a855f7 100%) !important;
+    min-height: 100vh !important;
 }
 
-/* Hide default Filament branding on login page */
-.fi-simple-layout .fi-logo {
+.fi-simple-main-ctn {
+    max-width: 420px !important;
+    width: 100% !important;
+    background: #ffffff !important;
+    border-radius: 1rem !important;
+    padding: 2.5rem !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Hide default header/logo */
+.fi-simple-layout .fi-simple-header {
     display: none !important;
 }
 
 /* Dark mode */
 .dark .fi-simple-layout {
-    background: #0f172a !important;
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4c1d95 100%) !important;
 }
 
-.dark .fi-simple-layout::before {
-    background: linear-gradient(160deg, #1e1b4b 0%, #312e81 50%, #3730a3 100%) !important;
+.dark .fi-simple-main-ctn {
+    background: #1e293b !important;
 }
