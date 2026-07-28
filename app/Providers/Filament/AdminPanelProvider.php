@@ -46,21 +46,6 @@ class AdminPanelProvider extends PanelProvider
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('15rem')
             ->renderHook(
-                'panels::auth.login.form.before',
-                fn (): string => '
-                <link rel="stylesheet" href="' . asset('css/login-custom.css') . '">
-                <style>.fi-simple-layout .fi-simple-header { display: none !important; }</style>
-                <div class="mb-6">
-                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Welcome Back</h1>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Please log in to your account</p>
-                </div>
-                '
-            )
-            ->renderHook(
-                'panels::auth.login.form.after',
-                fn (): string => ''
-            )
-            ->renderHook(
                 'panels::head.end',
                 fn (): string => '<style>
                     /* Minimal Sidebar */
