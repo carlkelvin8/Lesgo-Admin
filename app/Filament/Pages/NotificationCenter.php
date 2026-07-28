@@ -86,14 +86,35 @@ class NotificationCenter extends Page
     public function sendNotification(): void
     {
         $data = $this->form->getState();
-        
-        // Logic to send notifications would go here
-        
+
+        // Determine recipients
+        $query = User::query();
+        match ($data['recipient_type']) {
+            'drivers' => $query->where('role', 'driver'),
+            'customers' => $query->where('role', 'customer'),
+            'specific' => $query->whereIn('id', $data['user_ids'] ?? []),
+            default => null, // all users
+        };
+
+        $users = $query->get();
+        $count = 0;
+
+        foreach ($users as $user) {
+            \App\Models\Notification::create([
+                'user_id' => $user->id,
+                'title' => $data['title'],
+                'body' => $data['message'],
+                'type' => $data['type'],
+                'data' => ['sent_by' => auth()->id(), 'channel' => 'in_app'],
+            ]);
+            $count++;
+        }
+
         Notification::make()
-            ->title('Notifications sent successfully')
+            ->title("Notifications sent to {$count} user(s)")
             ->success()
             ->send();
-            
+
         $this->form->fill();
     }
 
