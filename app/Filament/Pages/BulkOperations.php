@@ -44,17 +44,19 @@ class BulkOperations extends Page
                                     ->schema([
                                         Forms\Components\Select::make('driver_id')
                                             ->label('Select Driver')
-                                            ->options(DriverProfile::query()->pluck('name', 'id'))
+                                            ->options(
+                                                DriverProfile::with('user')->get()->pluck('user.name', 'id')
+                                            )
                                             ->searchable()
                                             ->required(),
                                         Forms\Components\CheckboxList::make('order_ids')
                                             ->label('Select Orders')
                                             ->options(
                                                 Order::where('status', 'pending')
-                                                    ->orWhere('status', 'confirmed')
+                                                    ->orWhere('status', 'accepted')
                                                     ->get()
                                                     ->mapWithKeys(fn ($order) => [
-                                                        $order->id => "Order #{$order->id} - {$order->pickup_address}"
+                                                        $order->id => "Order #{$order->id} - {$order->status}"
                                                     ])
                                             )
                                             ->columns(2)

@@ -39,7 +39,7 @@ class Reports extends Page
             ],
             'users' => [
                 'total' => User::count(),
-                'active' => User::where('is_active', true)->count(),
+                'active' => User::whereNotNull('email_verified_at')->count(),
                 'new_this_month' => User::whereMonth('created_at', now()->month)->count(),
             ],
             'drivers' => [
