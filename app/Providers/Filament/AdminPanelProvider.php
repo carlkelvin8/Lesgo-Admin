@@ -48,6 +48,24 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(
                 'panels::head.end',
                 fn (): string => '<style>
+                    /* Login Page Styles */
+                    .fi-simple-layout {
+                        background: linear-gradient(135deg, #4c1d95 0%, #6d28d9 50%, #7c3aed 100%) !important;
+                        min-height: 100vh !important;
+                    }
+                    .fi-simple-main-ctn {
+                        background: #ffffff !important;
+                        border-radius: 1.25rem !important;
+                        padding: 2.5rem !important;
+                        box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.3) !important;
+                        max-width: 400px !important;
+                    }
+                    .dark .fi-simple-layout {
+                        background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #3730a3 100%) !important;
+                    }
+                    .dark .fi-simple-main-ctn {
+                        background: #1e293b !important;
+                    }
                     /* Minimal Sidebar */
                     .fi-sidebar {
                         border-right: 1px solid rgba(148, 163, 184, 0.1) !important;
