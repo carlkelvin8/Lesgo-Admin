@@ -220,6 +220,40 @@ class UserResource extends Resource
                             ]);
                         })
                         ->successNotificationTitle('User unbanned successfully'),
+                    Tables\Actions\Action::make('deactivate')
+                        ->icon('heroicon-o-pause-circle')
+                        ->color('warning')
+                        ->visible(fn ($record) => $record->account_status !== 'deactivated' && !$record->is_banned)
+                        ->requiresConfirmation()
+                        ->modalHeading('Deactivate User')
+                        ->modalDescription('This will prevent the user from using the app.')
+                        ->form([
+                            Forms\Components\Textarea::make('deactivation_reason')
+                                ->label('Reason')
+                                ->rows(2)
+                                ->maxLength(500),
+                        ])
+                        ->action(function ($record, array $data) {
+                            $record->update([
+                                'account_status' => 'deactivated',
+                                'deactivated_at' => now(),
+                                'deactivation_reason' => $data['deactivation_reason'] ?? null,
+                            ]);
+                        })
+                        ->successNotificationTitle('User deactivated'),
+                    Tables\Actions\Action::make('activate')
+                        ->icon('heroicon-o-play-circle')
+                        ->color('success')
+                        ->visible(fn ($record) => $record->account_status === 'deactivated')
+                        ->requiresConfirmation()
+                        ->action(function ($record) {
+                            $record->update([
+                                'account_status' => 'active',
+                                'deactivated_at' => null,
+                                'deactivation_reason' => null,
+                            ]);
+                        })
+                        ->successNotificationTitle('User activated'),
                     Tables\Actions\DeleteAction::make()
                         ->requiresConfirmation()
                         ->successNotificationTitle('User account deleted successfully'),
