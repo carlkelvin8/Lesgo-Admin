@@ -16,11 +16,19 @@ class Dashboard extends BaseDashboard
             \App\Filament\Widgets\StatsOverview::class,
             \App\Filament\Widgets\OrdersOverviewChart::class,
             \App\Filament\Widgets\RevenueChart::class,
+            \App\Filament\Widgets\DriverPerformanceChart::class,
+            \App\Filament\Widgets\PaymentMethodsChart::class,
+            \App\Filament\Widgets\UserGrowthChart::class,
+            \App\Filament\Widgets\ServiceDemandChart::class,
+            \App\Filament\Widgets\PartnerPerformanceChart::class,
         ];
     }
 
     public function getColumns(): int | string | array
     {
-        return 1;
+        return [
+            'md' => 2,
+            'xl' => 3,
+        ];
     }
 }

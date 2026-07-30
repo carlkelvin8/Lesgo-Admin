@@ -192,9 +192,11 @@ class PartnerResource extends Resource
                         'success' => 'active',
                         'danger' => 'suspended',
                         'gray' => 'rejected',
-                    ]),
+                    ])
+                    ->editable(),
                 Tables\Columns\TextColumn::make('rating')
-                    ->sortable(),
+                    ->sortable()
+                    ->editable(),
                 Tables\Columns\IconColumn::make('is_open')
                     ->boolean()
                     ->label('Open'),
@@ -217,19 +219,18 @@ class PartnerResource extends Resource
                         'active' => 'Active',
                         'suspended' => 'Suspended',
                         'rejected' => 'Rejected',
-                    ]),
+
+                    ])
+                    ->searchable(),
                 Tables\Filters\SelectFilter::make('category')
                     ->options([
-                        'food' => 'Food & Beverage',
-                        'grocery' => 'Grocery',
+                        'restaurant' => 'Restaurant',
+                        'retail' => 'Retail',
                         'logistics' => 'Logistics',
-                        'delivery' => 'Delivery',
-                        'services' => 'Services',
+                        'other' => 'Other',
                     ]),
-                Tables\Filters\TernaryFilter::make('is_open')
-                    ->label('Open Status'),
-                Tables\Filters\TernaryFilter::make('is_featured')
-                    ->label('Featured'),
+                Tables\Filters\TernaryFilter::make('is_open'),
+                Tables\Filters\TernaryFilter::make('is_featured'),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -241,7 +242,9 @@ class PartnerResource extends Resource
                     Tables\Actions\DeleteBulkAction::make()->requiresConfirmation(),
                 ]),
             ])
-            ->defaultSort('created_at', 'desc');
+            ->recordTitleAttribute('name')
+            ->defaultSort('created_at', 'desc')
+            ->striped();
     }
 
     public static function getRelations(): array

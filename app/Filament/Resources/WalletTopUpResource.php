@@ -9,11 +9,18 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class WalletTopUpResource extends Resource
 {
     protected static ?string $model = WalletTopUp::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-arrow-up-circle';
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with(['user']);
+    }
     protected static ?string $navigationGroup = 'Finance';
     protected static ?int $navigationSort = 3;
     protected static ?string $modelLabel = 'Wallet Top-Up';

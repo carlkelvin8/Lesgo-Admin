@@ -18,20 +18,22 @@ class RevenueChart extends ChartWidget
         $weeks = collect(range(7, 0))->map(fn ($i) => now()->subWeeks($i)->startOfWeek());
         $labels = $weeks->map(fn ($w) => $w->format('M d'))->toArray();
 
-        $revenue = Payment::where('status', 'paid')
+        $payments = Payment::where('status', 'paid')
             ->where('created_at', '>=', now()->subWeeks(8)->startOfWeek())
-            ->selectRaw("DATE(date_trunc('week', created_at)) as week, SUM(amount) as total")
-            ->groupByRaw("DATE(date_trunc('week', created_at))")
-            ->pluck('total', 'week')
-            ->toArray();
+            ->get();
 
-        $data = $weeks->map(fn ($w) => (float) ($revenue[$w->toDateString()] ?? 0))->toArray();
+        $weekly = collect();
+        foreach ($weeks as $week) {
+            $weekEnd = (clone $week)->endOfWeek();
+            $total = $payments->filter(fn ($p) => $p->created_at >= $week && $p->created_at <= $weekEnd)->sum('amount');
+            $weekly->push((float) $total);
+        }
 
         return [
             'datasets' => [
                 [
                     'label' => 'Revenue (PHP)',
-                    'data' => $data,
+                    'data' => $weekly->toArray(),
                     'backgroundColor' => 'rgba(139, 92, 246, 0.85)',
                     'borderColor' => '#8b5cf6',
                     'borderWidth' => 0,

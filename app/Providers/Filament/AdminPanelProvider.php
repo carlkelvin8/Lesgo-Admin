@@ -31,6 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogo(fn () => view('filament.components.logo'))
             ->darkModeBrandLogo(fn () => view('filament.components.logo'))
             ->brandLogoHeight('2.5rem')
+            ->favicon(asset('favicon.svg'))
             ->darkMode(true)
             ->colors([
                 'primary' => Color::Purple,
@@ -187,6 +188,29 @@ class AdminPanelProvider extends PanelProvider
                     <p class="text-xs text-gray-400 dark:text-gray-500">
                         &copy; ' . date('Y') . ' Lesgo Logistics. All rights reserved.
                     </p>
+                </div>
+                '
+            )
+            ->renderHook(
+                'panels::body.start',
+                fn (): string => '
+                <div id="app-loading" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;background:#ffffff;transition:opacity 0.5s ease">
+                    <div class="fi-loading-spinner"></div>
+                    <p style="color:#6b7280;font-size:0.875rem;font-weight:500">Loading Lesgo Admin...</p>
+                    <style>
+                        .dark #app-loading {
+                            background: linear-gradient(135deg, #1e1b4b, #312e81, #4c1d95) !important;
+                        }
+                        .dark #app-loading p { color: #e9d5ff !important; }
+                    </style>
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function() {
+                            setTimeout(function() {
+                                var el = document.getElementById("app-loading");
+                                if (el) { el.style.opacity = "0"; setTimeout(function() { el.remove(); }, 500); }
+                            }, 300);
+                        });
+                    </script>
                 </div>
                 '
             )

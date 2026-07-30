@@ -25,6 +25,11 @@ class AuditLogResource extends Resource
     
     protected static ?int $navigationSort = 1;
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with(['user']);
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -51,7 +56,8 @@ class AuditLogResource extends Resource
                     ->disabled(),
                 Forms\Components\Textarea::make('user_agent')
                     ->disabled()
-                    ->rows(2),
+                    ->rows(2)
+                    ->columnSpanFull(),
                 Forms\Components\KeyValue::make('tags')
                     ->disabled(),
             ]);

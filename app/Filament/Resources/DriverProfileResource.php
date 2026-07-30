@@ -33,100 +33,106 @@ class DriverProfileResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Section::make('Driver Details')
-                ->schema([
-                    Forms\Components\Select::make('user_id')
-                        ->label('User Account')
-                        ->relationship('user', 'name')
-                        ->searchable()
-                        ->preload()
-                        ->required(),
-                    Forms\Components\Select::make('partner_id')
-                        ->label('Partner')
-                        ->relationship('partner', 'name')
-                        ->searchable()
-                        ->preload()
-                        ->nullable(),
-                    Forms\Components\Select::make('status')
-                        ->required()
-                        ->options([
-                            'pending' => 'Pending',
-                            'active' => 'Active',
-                            'inactive' => 'Inactive',
-                            'suspended' => 'Suspended',
-                        ])
-                        ->default('pending'),
-                    Forms\Components\Select::make('package_tier')
-                        ->options([
-                            'basic' => 'Basic',
-                            'standard' => 'Standard',
-                            'premium' => 'Premium',
-                        ])
-                        ->nullable(),
-                    Forms\Components\TextInput::make('commission_rate')
-                        ->label('Commission Rate (%)')
-                        ->numeric()
-                        ->minValue(0)
-                        ->maxValue(100)
-                        ->default(0)
-                        ->suffix('%'),
-                    Forms\Components\TextInput::make('rating')
-                        ->numeric()
-                        ->minValue(0)
-                        ->maxValue(5)
-                        ->default(0),
-                    Forms\Components\TextInput::make('total_trips')
-                        ->numeric()
-                        ->default(0),
-                ])->columns(2),
+            Forms\Components\Wizard::make([
+                Forms\Components\Wizard\Step::make('Driver Details')
+                    ->icon('heroicon-o-user')
+                    ->schema([
+                        Forms\Components\Select::make('user_id')
+                            ->label('User Account')
+                            ->relationship('user', 'name')
+                            ->searchable()
+                            ->preload()
+                            ->required(),
+                        Forms\Components\Select::make('partner_id')
+                            ->label('Partner')
+                            ->relationship('partner', 'name')
+                            ->searchable()
+                            ->preload()
+                            ->nullable(),
+                        Forms\Components\Select::make('status')
+                            ->required()
+                            ->options([
+                                'pending' => 'Pending',
+                                'active' => 'Active',
+                                'inactive' => 'Inactive',
+                                'suspended' => 'Suspended',
+                            ])
+                            ->default('pending'),
+                        Forms\Components\Select::make('package_tier')
+                            ->options([
+                                'basic' => 'Basic',
+                                'standard' => 'Standard',
+                                'premium' => 'Premium',
+                            ])
+                            ->nullable(),
+                        Forms\Components\TextInput::make('commission_rate')
+                            ->label('Commission Rate (%)')
+                            ->numeric()
+                            ->minValue(0)
+                            ->maxValue(100)
+                            ->default(0)
+                            ->suffix('%'),
+                        Forms\Components\TextInput::make('rating')
+                            ->numeric()
+                            ->minValue(0)
+                            ->maxValue(5)
+                            ->default(0),
+                        Forms\Components\TextInput::make('total_trips')
+                            ->numeric()
+                            ->default(0),
+                    ])->columns(2),
 
-            Forms\Components\Section::make('License & Vehicle')
-                ->schema([
-                    Forms\Components\TextInput::make('license_number')
-                        ->maxLength(100)
-                        ->nullable(),
-                    Forms\Components\DatePicker::make('license_expiry_date')
-                        ->nullable(),
-                    Forms\Components\Select::make('vehicle_type')
-                        ->options([
-                            'motorcycle' => 'Motorcycle',
-                            'car' => 'Car',
-                            'van' => 'Van',
-                            'truck' => 'Truck',
-                            'bicycle' => 'Bicycle',
-                        ])
-                        ->nullable(),
-                    Forms\Components\TextInput::make('plate_number')
-                        ->maxLength(20)
-                        ->nullable(),
-                ])->columns(2),
+                Forms\Components\Wizard\Step::make('License & Vehicle')
+                    ->icon('heroicon-o-truck')
+                    ->completedIcon('heroicon-o-check')
+                    ->schema([
+                        Forms\Components\TextInput::make('license_number')
+                            ->maxLength(100)
+                            ->nullable(),
+                        Forms\Components\DatePicker::make('license_expiry_date')
+                            ->nullable(),
+                        Forms\Components\Select::make('vehicle_type')
+                            ->options([
+                                'motorcycle' => 'Motorcycle',
+                                'car' => 'Car',
+                                'van' => 'Van',
+                                'truck' => 'Truck',
+                                'bicycle' => 'Bicycle',
+                            ])
+                            ->nullable(),
+                        Forms\Components\TextInput::make('plate_number')
+                            ->maxLength(20)
+                            ->nullable(),
+                    ])->columns(2),
 
-            Forms\Components\Section::make('Driver Requirements')
-                ->description('Documents submitted by the rider for verification')
-                ->schema([
-                    Forms\Components\ViewField::make('documents_display')
-                        ->label('')
-                        ->view('filament.components.driver-documents')
-                        ->columnSpanFull(),
-                    Forms\Components\TextInput::make('id_document_path')
-                        ->label('Valid ID Path')
-                        ->disabled(),
-                    Forms\Components\TextInput::make('clearance_document_path')
-                        ->label('Clearance Path')
-                        ->disabled(),
-                    Forms\Components\TextInput::make('license_document_path')
-                        ->label("License Path")
-                        ->disabled(),
-                    Forms\Components\TextInput::make('biodata_document_path')
-                        ->label('Biodata Path')
-                        ->disabled(),
-                    Forms\Components\TextInput::make('motor_registration_path')
-                        ->label('Motor Registration Path')
-                        ->disabled(),
-                    Forms\Components\TextInput::make('motor_or_path')
-                        ->label('Motor OR Path')
-                        ->disabled(),
-                ])->columns(2),
+                Forms\Components\Wizard\Step::make('Documents')
+                    ->icon('heroicon-o-document-text')
+                    ->completedIcon('heroicon-o-check')
+                    ->schema([
+                        Forms\Components\ViewField::make('documents_display')
+                            ->label('')
+                            ->view('filament.components.driver-documents')
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('id_document_path')
+                            ->label('Valid ID Path')
+                            ->disabled(),
+                        Forms\Components\TextInput::make('clearance_document_path')
+                            ->label('Clearance Path')
+                            ->disabled(),
+                        Forms\Components\TextInput::make('license_document_path')
+                            ->label("License Path")
+                            ->disabled(),
+                        Forms\Components\TextInput::make('biodata_document_path')
+                            ->label('Biodata Path')
+                            ->disabled(),
+                        Forms\Components\TextInput::make('motor_registration_path')
+                            ->label('Motor Registration Path')
+                            ->disabled(),
+                        Forms\Components\TextInput::make('motor_or_path')
+                            ->label('Motor OR Path')
+                            ->disabled(),
+                    ])->columns(2),
+            ])->columnSpanFull(),
         ]);
     }
 
@@ -149,7 +155,8 @@ class DriverProfileResource extends Resource
                         'success' => 'active',
                         'gray' => 'inactive',
                         'danger' => 'suspended',
-                    ]),
+                    ])
+                    ->editable(),
                 Tables\Columns\TextColumn::make('vehicle_type')
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('plate_number')
@@ -158,15 +165,21 @@ class DriverProfileResource extends Resource
                     ->label('Commission')
                     ->suffix('%')
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable()
+                    ->editable(),
                 Tables\Columns\TextColumn::make('rating')
-                    ->sortable(),
+                    ->sortable()
+                    ->editable(),
                 Tables\Columns\TextColumn::make('total_trips')
                     ->label('Trips')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('package_tier')
                     ->label('Tier')
                     ->toggleable(),
+                Tables\Columns\TextColumn::make('user.email')
+                    ->label('Email')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -205,7 +218,8 @@ class DriverProfileResource extends Resource
                     Tables\Actions\DeleteBulkAction::make()->requiresConfirmation(),
                 ]),
             ])
-            ->defaultSort('created_at', 'desc');
+            ->defaultSort('created_at', 'desc')
+            ->striped();
     }
 
     public static function getRelations(): array

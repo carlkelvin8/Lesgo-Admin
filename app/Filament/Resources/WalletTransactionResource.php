@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class WalletTransactionResource extends Resource
 {
@@ -17,6 +18,11 @@ class WalletTransactionResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-arrows-right-left';
     protected static ?string $navigationGroup = 'Finance';
     protected static ?int $navigationSort = 2;
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with(['wallet.user']);
+    }
 
     public static function form(Form $form): Form
     {
@@ -78,7 +84,8 @@ class WalletTransactionResource extends Resource
                     ->money('PHP'),
                 Tables\Columns\TextColumn::make('description')
                     ->limit(30)
-                    ->searchable(),
+                    ->searchable()
+                    ->expandable(),
                 Tables\Columns\TextColumn::make('reference')
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')

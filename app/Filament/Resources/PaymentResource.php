@@ -102,7 +102,8 @@ class PaymentResource extends Resource
                         'success' => 'paid',
                         'danger' => 'failed',
                         'gray' => 'refunded',
-                    ]),
+                    ])
+                    ->editable(),
                 Tables\Columns\TextColumn::make('paid_at')
                     ->dateTime()
                     ->sortable()
@@ -132,7 +133,8 @@ class PaymentResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
-            ->defaultSort('created_at', 'desc');
+            ->defaultSort('created_at', 'desc')
+            ->striped();
     }
 
     public static function getRelations(): array

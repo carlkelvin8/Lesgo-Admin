@@ -50,7 +50,7 @@
         <p>Perform actions on multiple items at once to save time</p>
     </div>
     
-    <form wire:submit="assignDriver">
+    <form wire:submit.prevent="assignDriver">
         {{ $this->form }}
         
         <div class="mt-6 flex justify-end gap-3">

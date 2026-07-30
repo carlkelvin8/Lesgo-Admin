@@ -226,7 +226,7 @@
     </div>
     
     <!-- Settings Form -->
-    <form wire:submit="save">
+    <form wire:submit.prevent="save">
         {{ $this->form }}
         
         <div class="mt-6 flex justify-end gap-3">

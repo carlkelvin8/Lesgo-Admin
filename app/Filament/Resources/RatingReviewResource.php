@@ -9,11 +9,18 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class RatingReviewResource extends Resource
 {
     protected static ?string $model = RatingReview::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-star';
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with(['user']);
+    }
     protected static ?string $navigationGroup = 'Operations';
     protected static ?int $navigationSort = 4;
     protected static ?string $modelLabel = 'Rating & Review';
@@ -40,7 +47,7 @@ class RatingReviewResource extends Resource
             Tables\Columns\TextColumn::make('user.name')->searchable(),
             Tables\Columns\TextColumn::make('order_id')->label('Order #'),
             Tables\Columns\TextColumn::make('overall_rating')->sortable(),
-            Tables\Columns\TextColumn::make('review_comment')->limit(40),
+            Tables\Columns\TextColumn::make('review_comment')->limit(40)->expandable(),
             Tables\Columns\TextColumn::make('status')->badge()->colors(['warning' => 'pending', 'success' => 'approved', 'danger' => 'rejected', 'gray' => 'flagged']),
             Tables\Columns\IconColumn::make('is_featured')->boolean(),
             Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable(),

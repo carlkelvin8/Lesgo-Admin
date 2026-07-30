@@ -7,10 +7,16 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class VehiclesRelationManager extends RelationManager
 {
     protected static string $relationship = 'vehicles';
+
+    protected function getTableQuery(): Builder
+    {
+        return parent::getTableQuery()->with(['driver.user']);
+    }
 
     public function form(Form $form): Form
     {

@@ -105,7 +105,7 @@
         </div>
     </div>
     
-    <form wire:submit="sendNotification">
+    <form wire:submit.prevent="sendNotification">
         {{ $this->form }}
         
         <div class="mt-6 flex justify-end gap-3">

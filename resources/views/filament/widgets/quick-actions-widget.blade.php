@@ -2,7 +2,7 @@
     <x-filament::section>
         <div class="quick-actions-container">
             <div class="quick-actions-header">
-                <h3 class="text-lg font-bold">⚡ Quick Actions</h3>
+                <h3 class="text-lg font-bold">Quick Actions</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400">Frequently used actions for faster workflow</p>
             </div>
             

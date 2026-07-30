@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\User;
 use App\Models\Partner;
 use App\Models\Payment;
+use App\Models\SupportTicket;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
@@ -45,6 +46,10 @@ class StatsOverview extends BaseWidget
                 ->description('Available riders')
                 ->descriptionIcon('heroicon-m-truck')
                 ->color('primary'),
+            Stat::make('Open Tickets', SupportTicket::whereIn('status', ['open', 'in_progress'])->count())
+                ->description('Needs attention')
+                ->descriptionIcon('heroicon-m-lifebuoy')
+                ->color('danger'),
         ];
     }
 }

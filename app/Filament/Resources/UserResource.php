@@ -129,7 +129,8 @@ class UserResource extends Resource
                         'heroicon-o-building-office' => 'partner',
                         'heroicon-o-truck' => 'driver',
                         'heroicon-o-user' => 'customer',
-                    ]),
+                    ])
+                    ->editable(),
                 Tables\Columns\IconColumn::make('email_verified_at')
                     ->label('Verified')
                     ->boolean()

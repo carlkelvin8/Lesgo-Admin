@@ -174,20 +174,24 @@ class OrderResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('service.name')
                     ->label('Service')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('partner.name')
                     ->label('Partner')
                     ->searchable()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->colors([
-                        'warning' => 'pending',
-                        'info' => 'accepted',
-                        'primary' => fn ($state) => in_array($state, ['picked_up', 'driver_arrived', 'in_progress']),
-                        'success' => 'completed',
-                        'danger' => 'cancelled',
-                    ]),
+                    ->color(fn (string $state): string => match ($state) {
+                        'pending' => 'warning',
+                        'accepted' => 'info',
+                        'picked_up', 'driver_arrived', 'in_progress' => 'primary',
+                        'completed' => 'success',
+                        'cancelled' => 'danger',
+                        default => 'gray',
+                    })
+                    ->editable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('payment_status')
                     ->badge()
                     ->colors([
@@ -195,13 +199,25 @@ class OrderResource extends Resource
                         'success' => 'paid',
                         'danger' => 'failed',
                         'gray' => 'refunded',
-                    ]),
+                    ])
+                    ->editable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('actual_fare')
                     ->label('Fare')
                     ->money('PHP')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('driver_share')
+                    ->label('Driver')
+                    ->money('PHP')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('payment_method')
-                    ->toggleable(),
+                    ->toggleable()
+                    ->expandable(),
+                Tables\Columns\TextColumn::make('driver.user.name')
+                    ->label('Assigned Driver')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -244,7 +260,8 @@ class OrderResource extends Resource
                     Tables\Actions\DeleteBulkAction::make()->requiresConfirmation(),
                 ]),
             ])
-            ->defaultSort('created_at', 'desc');
+            ->defaultSort('created_at', 'desc')
+            ->striped();
     }
 
     public static function getRelations(): array
